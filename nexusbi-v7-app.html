@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexusBI v7</title>
+<style>
+:root{--bg:#fafaf7;--paper:#fff;--sunk:#f5f2ea;--ink:#0a0a0a;--ink2:#1f1f1f;--muted:#6b7280;--muted2:#9ca3af;--line:#e7e3d9;--line2:#d4cebf;--accent:#1e40af;--accent-lt:#dbeafe;--warm:#c2410c;--warm-lt:#ffedd5;--emerald:#047857;--emerald-lt:#d1fae5;--amber:#b45309;--amber-lt:#fef3c7;--violet:#6d28d9;--violet-lt:#ede9fe;--rose:#be185d;--sb-w:224px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:14px}
+a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inherit;font-size:13px}
+.lp{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#fafaf7,#f0ede4)}
+.lc{width:380px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.lb{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.bx{width:28px;height:28px;background:var(--ink);position:relative;display:inline-block;flex-shrink:0}.bx::after{content:'';position:absolute;inset:4px;background:var(--warm)}
+.bx-s{width:18px;height:18px}.bx-s::after{inset:3px}
+.lt{font-size:26px;font-weight:700;margin-bottom:4px}.ls{font-size:13px;color:var(--muted);margin-bottom:20px}
+.shell{display:grid;grid-template-columns:var(--sb-w) 1fr;min-height:100vh}
+.sb{background:#fbfaf6;border-right:1px solid var(--line);display:flex;flex-direction:column;max-height:100vh;overflow-y:auto}
+.sb-br{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.sb-v{display:inline-block;padding:1px 6px;background:var(--warm);color:#fff;font-size:9px;border-radius:99px;margin-left:4px;letter-spacing:.04em}
+.sb-sec{padding:8px 10px}
+.sb-cat{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted2);padding:6px 8px 4px;font-weight:600}
+.sb-i{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:5px;font-size:13px;color:var(--ink2);cursor:pointer;transition:background .12s}
+.sb-i:hover{background:var(--accent-lt)}.sb-i.ac{background:var(--accent-lt);color:var(--accent);font-weight:600}
+.sb-i .d{width:5px;height:5px;border-radius:50%;background:var(--muted2);flex-shrink:0}.sb-i.ac .d{background:var(--accent)}
+.sb-i .nw{margin-left:auto;font-size:8px;padding:1px 5px;background:var(--warm);color:#fff;border-radius:99px;letter-spacing:.05em}
+.sb-ft{margin-top:auto;padding:12px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);background:#fbfaf6;position:sticky;bottom:0}
+.sb-ft button{background:none;border:none;color:var(--warm);font-size:11px;font-weight:600;cursor:pointer}
+.mn{padding:24px 32px;overflow-y:auto;max-height:100vh}
+.tb{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.pt{font-size:24px;font-weight:700;letter-spacing:-.02em}.pd{font-size:13px;color:var(--muted);margin-top:4px}.bc{font-size:11px;color:var(--muted);margin-bottom:6px;font-family:monospace}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:12px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:4px}
+.btn:hover{opacity:.9}.bg{background:#fff;color:var(--ink)}.bw{background:var(--warm);border-color:var(--warm)}.be{background:var(--emerald);border-color:var(--emerald)}.bv{background:var(--violet);border-color:var(--violet)}.bs{padding:4px 10px;font-size:11px}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:10px;font-weight:600;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.bdg-ok{background:#dcfce7;color:#166534}.bdg-er{background:#fee2e2;color:#991b1b}.bdg-wn{background:var(--amber-lt);color:#92400e}.bdg-in{background:var(--accent-lt);color:var(--accent)}.bdg-vi{background:var(--violet-lt);color:var(--violet)}.bdg-ol{border:1px solid var(--line2);color:var(--muted);background:#fff}
+.bdg-new{background:var(--warm);color:#fff}
+.cd{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;transition:box-shadow .15s}.cd:hover{box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kp{border:1px solid var(--line);padding:14px 16px;background:#fff;border-radius:4px}
+.kl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600}
+.kv{font-size:28px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.kd{font-size:11px;margin-top:4px;font-family:monospace}.kd.up{color:var(--emerald)}.kd.dn{color:var(--warm)}
+.fr{margin-bottom:14px}.fl{font-size:11px;font-weight:600;margin-bottom:5px;display:block}.flh{font-size:10px;color:var(--muted);font-weight:400;margin-top:3px}
+.ip{width:100%;padding:8px 10px;border:1px solid var(--line2);background:#fff;font-size:13px;border-radius:4px;outline:none}.ip:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(30,64,175,.1)}
+textarea.ip{font-family:monospace;font-size:12px;min-height:80px;resize:vertical}
+table.dt{width:100%;border-collapse:collapse;font-size:13px}table.dt thead tr{border-bottom:2px solid var(--ink)}table.dt th{text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}table.dt td{padding:10px 10px;border-bottom:1px solid var(--line)}table.dt tbody tr{cursor:pointer;transition:background .1s}table.dt tbody tr:hover{background:var(--sunk)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cb{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px}.ct{font-size:13px;font-weight:600;margin-bottom:10px}
+.cbl{background:#1a1a1a;color:#e5e5e5;font-family:'Courier New',monospace;font-size:12px;padding:16px;border-radius:6px;overflow-x:auto;line-height:1.6;white-space:pre}
+.tl{display:flex;align-items:center;gap:0;padding:12px 0}.tl-n{padding:8px 14px;border:1.5px solid var(--line);border-radius:4px;background:#fff;text-align:center;cursor:pointer;transition:all .15s}.tl-n:hover{border-color:var(--accent)}.tl-n.ac{border-color:var(--ink);background:var(--ink);color:#fff}.tl-n .v{font-weight:700;font-size:13px}.tl-n .da{font-size:10px;opacity:.7}.tl-l{flex:1;height:1.5px;background:var(--line2);min-width:16px;max-width:40px}
+.pb-r{display:flex;align-items:center;gap:10px;margin-bottom:8px}.pb-l{min-width:130px;font-size:12px}.pb-t{flex:1;height:18px;background:#f3f4f6;border-radius:2px;overflow:hidden}.pb-f{height:100%;border-radius:2px;transition:width .4s}.pb-v{min-width:50px;font-size:11px;text-align:right;font-family:monospace}
+.nl{display:flex;gap:8px;padding:10px 14px;border:1.5px solid var(--violet);border-radius:6px;background:linear-gradient(to right,#faf5ff,#fff);align-items:center;margin-bottom:16px}.nl input{flex:1;border:none;background:transparent;outline:none;font-size:13px}
+.nc{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#f3f4f6;border-radius:99px;font-size:11px;font-weight:500;margin:2px}
+.lc-c{background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/24px 24px,#fff;min-height:340px;position:relative;border:1px solid var(--line);border-radius:6px;padding:24px}
+.ln{position:absolute;padding:8px 14px;border:1.5px solid;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer}
+.ln-d{border-color:var(--accent);background:var(--accent-lt);color:var(--accent)}.ln-c{border-color:var(--violet);background:var(--violet-lt);color:var(--violet)}.ln-a{border-color:var(--emerald);background:var(--emerald-lt);color:var(--emerald)}.ln-w{border-color:var(--amber);background:var(--amber-lt);color:var(--amber);font-size:10px;padding:5px 10px}
+.dg{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;min-height:400px}
+.wg{background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px;position:relative}.wt{font-size:12px;font-weight:600;margin-bottom:8px}
+.wg-tools{position:absolute;top:8px;right:8px;display:flex;gap:2px;opacity:0;transition:opacity .15s}.wg:hover .wg-tools{opacity:1}
+.wg-tool{background:#fff;border:1px solid var(--line);font-size:10px;padding:2px 6px;border-radius:3px;color:var(--muted);cursor:pointer}
+.wg-tool:hover{background:var(--sunk)}.wg-tool.cmt-has{background:var(--violet-lt);color:var(--violet);border-color:var(--violet)}
+.wp{width:180px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px;height:fit-content}.wpt{font-size:12px;font-weight:700;margin-bottom:10px}.wpb{display:block;width:100%;text-align:left;padding:8px 10px;margin-bottom:4px;font-size:12px;border:1px solid var(--line);border-radius:4px;background:#fff;cursor:pointer}.wpb:hover{background:var(--sunk)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1000}
+.ml{background:#fff;border-radius:8px;padding:28px;max-width:640px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.15);max-height:88vh;overflow-y:auto}.mlt{font-size:18px;font-weight:700;margin-bottom:16px}.ml-sm{max-width:460px}.ml-lg{max-width:860px}
+.ts{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:2000;animation:su .3s ease}
+@keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+svg.ch{display:block;width:100%}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;margin-bottom:-1px;white-space:nowrap}
+.tab.ac{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.shelf{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:#fff;min-height:54px}
+.shelf-l{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#dbeafe;color:#1e40af;border-radius:99px;font-size:11px;font-weight:500;margin:2px;font-family:monospace}
+.fs-pane{width:200px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:10px}
+.fs-cat{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--warm);font-weight:700;margin:8px 0 6px}
+.fs-it{font-size:12px;padding:5px 8px;cursor:grab;border-radius:3px;margin-bottom:2px;font-family:monospace}
+.fs-it:hover{background:var(--accent-lt)}
+.fs-it.measure:hover{background:var(--amber-lt)}
+/* Flow canvas */
+.flow-canvas{position:relative;background:linear-gradient(#f1efe8 1px,transparent 1px) 0 0/20px 20px,linear-gradient(90deg,#f1efe8 1px,transparent 1px) 0 0/20px 20px,#fff;border:1px solid var(--line);border-radius:8px;min-height:520px;overflow:hidden}
+.flow-node{position:absolute;background:#fff;border:2px solid;border-radius:6px;padding:10px 12px;min-width:140px;cursor:move;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .15s,border-color .15s}
+.flow-node:hover{box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.flow-node.sel{border-width:2px;box-shadow:0 0 0 3px rgba(30,64,175,.2)}
+.flow-node-label{font-size:11px;font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.flow-node-icon{font-size:14px}
+.flow-node-type{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-family:monospace}
+.flow-node-status{position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;border:2px solid #fff}
+.flow-node-status.success{background:var(--emerald)}.flow-node-status.failed{background:var(--warm)}.flow-node-status.running{background:var(--amber);animation:pulse 1s infinite}.flow-node-status.pending{background:var(--muted2)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.flow-node-rows{font-size:10px;color:var(--muted);margin-top:4px;font-family:monospace}
+.flow-node-input{border-color:var(--accent);background:var(--accent-lt)}
+.flow-node-clean{border-color:var(--amber);background:var(--amber-lt)}
+.flow-node-transform{border-color:var(--violet);background:var(--violet-lt)}
+.flow-node-aggregate{border-color:var(--warm);background:var(--warm-lt)}
+.flow-node-output{border-color:var(--emerald);background:var(--emerald-lt)}
+.palette{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.palette-node{padding:8px 6px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:10px;cursor:grab;text-align:center;color:var(--ink2)}
+.palette-node:hover{border-color:var(--accent);background:var(--accent-lt)}
+.palette-cat{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin:10px 0 5px;grid-column:1/-1}
+/* Show Me panel */
+.sm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sm-tile{border:1.5px solid var(--line);border-radius:5px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;position:relative}
+.sm-tile.compat{border-color:var(--line2)}
+.sm-tile.best{border-color:var(--accent);background:var(--accent-lt);box-shadow:0 0 0 3px rgba(30,64,175,.15)}
+.sm-tile.incompat{opacity:.35;cursor:not-allowed}
+.sm-tile-icon{font-size:24px;margin-bottom:4px;display:block}
+.sm-tile-name{font-size:10px;font-weight:600;color:var(--ink2)}
+.sm-tile-score{position:absolute;top:3px;right:4px;font-size:8px;color:var(--muted);font-family:monospace}
+.sm-tile-reason{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:10px;padding:4px 8px;border-radius:4px;white-space:nowrap;z-index:10;margin-bottom:4px}
+.sm-tile:hover .sm-tile-reason{display:block}
+/* Map widget SVG container */
+.map-wr{background:#eff6ff;border:1px solid var(--line);border-radius:4px;padding:10px;position:relative;overflow:hidden}
+.map-legend{position:absolute;bottom:8px;left:8px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:6px 8px;font-size:9px;display:flex;gap:4px;align-items:center}
+.map-legend-swatch{display:inline-block;width:10px;height:10px}
+/* Comment sidebar */
+.cmt-side{position:fixed;top:0;right:0;width:360px;height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-4px 0 16px rgba(0,0,0,.06);z-index:999;display:flex;flex-direction:column}
+.cmt-hdr{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.cmt-body{flex:1;overflow-y:auto;padding:14px 16px}
+.cmt{border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:10px}
+.cmt-reply{margin-left:16px;border-left:2px solid var(--violet);background:var(--violet-lt)}
+.cmt-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px}
+.cmt-content{font-size:12px;line-height:1.5;margin-bottom:4px}
+.cmt-actions{display:flex;gap:8px;font-size:10px}
+.cmt-action{background:none;border:none;color:var(--accent);cursor:pointer;padding:0}
+.cmt-ctx{font-size:9px;font-family:monospace;background:var(--sunk);padding:2px 6px;border-radius:3px;color:var(--muted);margin-top:4px;display:inline-block}
+.cmt-foot{padding:12px 16px;border-top:1px solid var(--line);background:var(--sunk)}
+.mention{color:var(--accent);font-weight:600}
+/* LOD editor */
+.lod-preview{background:var(--sunk);border-left:3px solid var(--violet);padding:10px 12px;font-family:monospace;font-size:12px;margin-top:8px;border-radius:0 4px 4px 0}
+.lod-errors{background:#fee2e2;border-left:3px solid #dc2626;padding:8px 12px;font-size:11px;margin-top:6px;border-radius:0 4px 4px 0;color:#991b1b}
+.lod-ok{background:#dcfce7;border-left:3px solid var(--emerald);padding:8px 12px;font-size:11px;margin-top:6px;border-radius:0 4px 4px 0;color:#166534}
+/* Alert condition builder */
+.cond-row{display:grid;grid-template-columns:1fr 160px 1fr;gap:8px;align-items:end;margin-bottom:10px}
+/* Run history */
+.run-row{display:grid;grid-template-columns:80px 1fr 80px 100px 100px;gap:10px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px;align-items:center}
+.run-row:hover{background:var(--sunk)}
+/* Profile histogram */
+.hist-bars{display:flex;align-items:flex-end;gap:1px;height:60px;border-bottom:1px solid var(--line2);padding:4px 0}
+.hist-bar{background:var(--accent);flex:1;min-height:1px;transition:background .15s}
+.hist-bar:hover{background:var(--warm)}
+/* Pages playback */
+.pp-ctrl{display:flex;align-items:center;gap:10px;padding:10px;background:#fff;border:1px solid var(--line);border-radius:4px;margin-top:8px}
+.pp-scrub{flex:1;height:6px;background:var(--line);border-radius:3px;position:relative;cursor:pointer}
+.pp-scrub-f{height:100%;background:var(--accent);border-radius:3px;transition:width .2s}
+.pp-scrub-t{position:absolute;top:-18px;font-size:10px;font-family:monospace;color:var(--accent);font-weight:600;transform:translateX(-50%)}
+/* Shapes */
+.shape-pick{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.shape-tile{border:1.5px solid var(--line);border-radius:4px;padding:10px;text-align:center;cursor:pointer;background:#fff;aspect-ratio:1}
+.shape-tile:hover{border-color:var(--accent);background:var(--accent-lt)}
+.shape-tile.sel{border-color:var(--accent);background:var(--accent-lt)}
+.shape-tile svg{width:24px;height:24px}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sb{display:none}.kr,.g3,.g4{grid-template-columns:1fr 1fr}.cmt-side{width:100vw}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ═══ STATE ═══
+const U=[
+{id:'USR_ADMIN',u:'admin',p:'Admin@123!',n:'Platform Administrator',e:'admin@nexusbi.local',r:'PLATFORM_ADMIN',rs:['PLATFORM_ADMIN']},
+{id:'USR_A1',u:'author1',p:'Test@123!',n:'Sarah Chen',e:'sarah.chen@acme.local',r:'AUTHOR',rs:['AUTHOR']},
+{id:'USR_C1',u:'checker1',p:'Test@123!',n:'Michael Kim',e:'michael.kim@acme.local',r:'CHECKER',rs:['CHECKER']},
+{id:'USR_C2',u:'checker2',p:'Test@123!',n:'Emma Wilson',e:'emma.wilson@acme.local',r:'CHECKER',rs:['CHECKER']},
+{id:'USR_V1',u:'viewer1',p:'Test@123!',n:'David Lee',e:'david.lee@acme.local',r:'VIEWER',rs:['VIEWER']},
+{id:'USR_E',u:'embed_user',p:'Test@123!',n:'Embed Service',e:'embed@nexusbi.local',r:'EMBED_ONLY',rs:['EMBED_ONLY']}
+];
+const RP={
+PLATFORM_ADMIN:'*'.split(','),
+AUTHOR:'datasource.view,schema.view,explorer.use,lineage.view,dashboard.view,dashboard.create,dashboard.edit,dashboard.submit,dashboard.share,dashboard.export,workbook.view,workbook.create,workbook.edit,workbook.publish,story.view,story.create,flow.view,flow.create,flow.edit,flow.run,flow.schedule,alert.view,alert.create,alert.edit,subscription.manage,comment.view,comment.create,comment.resolve,shape.manage,hierarchy.manage,perf.view'.split(','),
+CHECKER:'dashboard.view,dashboard.approve,dashboard.reject,lineage.view,perf.view,flow.view,comment.view,comment.create,comment.resolve,alert.view'.split(','),
+VIEWER:'dashboard.view,story.view,explorer.use,comment.view,comment.create,alert.view,subscription.manage'.split(','),
+EMBED_ONLY:['dashboard.view']};
+
+const DS=[{id:'DS_PG',nm:'production-warehouse',tp:'postgres',st:'ACTIVE',tb:247,ms:89},{id:'DS_SF',nm:'snowflake-finance',tp:'snowflake',st:'ACTIVE',tb:89,ms:142},{id:'DS_BQ',nm:'bq-analytics',tp:'bigquery',st:'ACTIVE',tb:34,ms:203},{id:'DS_OR',nm:'oracle-legacy',tp:'oracle',st:'ERROR',tb:0,ms:0,er:'ORA-12514'},{id:'DS_DB',nm:'databricks-ml',tp:'databricks',st:'ACTIVE',tb:17,ms:178},{id:'DS_CH',nm:'clickhouse-events',tp:'clickhouse',st:'ACTIVE',tb:12,ms:45}];
+
+const SHARES={DASH_REVENUE:['USR_V1']};
+
+// Dashboards with widgets (including map + density demo)
+const DA=[
+{id:'DASH_REVENUE',nm:'Q4 Revenue Overview',ds:'Quarterly revenue performance across all regions',st:'APPROVED',on:'Sarah Chen',ownerId:'USR_A1',v:3,tg:'revenue,quarterly',w:[
+  {id:'w1',t:'kpi',ti:'Total Revenue',vl:'$4.28M',su:'↑ 14.2% vs Q3',c:3},
+  {id:'w2',t:'kpi',ti:'Orders',vl:'12,847',su:'↑ 8.1%',c:3},
+  {id:'w3',t:'kpi',ti:'AOV',vl:'$333',su:'↓ 2.1%',c:3},
+  {id:'w4',t:'kpi',ti:'APAC Revenue',vl:'$1.42M',su:'↑ 22.7%',c:3},
+  {id:'w5',t:'bar',ti:'Revenue by Region',c:6,cats:['APAC','EMEA','Americas','ANZ','LATAM','MEA'],vals:[1420,980,1560,320,280,190],cl:'#1e40af'},
+  {id:'w6',t:'map',ti:'Global Revenue Heatmap',c:6,mapType:'choropleth'},
+  {id:'w7',t:'line',ti:'Revenue Trend w/ 3-Month Forecast',c:8,cats:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],vals:[3200,3450,3820,3940,4120,4280,null,null,null],forecast:[null,null,null,null,null,4280,4420,4580,4740],cl:'#047857'},
+  {id:'w8',t:'tbl',ti:'Top Products (with sparklines)',c:4,cols:['Product','Revenue','Trend'],rows:[['Enterprise','$1.2M','spark1'],['Pro','$847K','spark2'],['Team','$562K','spark3']]}
+]}
+];
+
+// Workbooks
+const WB=[{id:'WB_REVENUE',nm:'Revenue Analysis Workbook',ds:'Personal workspace for exploring revenue.',ownerId:'USR_A1',ownerNm:'Sarah Chen',pub:false,v:1,tg:'revenue'}];
+const WSheets={WB_REVENUE:[
+{id:'WS_REGION',nm:'Revenue by Region',ord:0,ct:'bar',cube:'Orders',shelves:{cols:['region'],rows:['total_revenue'],color:'region',size:null,label:null,detail:[],tooltip:[]}},
+{id:'WS_TREND',nm:'Revenue Trend',ord:1,ct:'line',cube:'Orders',shelves:{cols:['order_date.month'],rows:['total_revenue'],color:null,size:null,label:null,detail:[],tooltip:[]}}
+]};
+const CalcFields={WB_REVENUE:[{id:'CF1',nm:'profit_margin',expr:'(total_revenue - total_cost) / NULLIF(total_revenue, 0)',ft:'measure',dt:'number',valid:true,lod:null}]};
+const LodFields={WB_REVENUE:[{id:'LOD1',nm:'avg_region_revenue',expr:'{FIXED [region]: AVG([total_revenue])}',valid:true,parsed:{type:'fixed',dimensions:['region'],aggregation:'AVG',measureField:'total_revenue'}}]};
+const Params={WB_REVENUE:[{id:'P1',nm:'target_region',disp:'Target Region',dt:'string',cur:'APAC',def:'APAC',at:'list',av:['APAC','EMEA','Americas','ANZ','LATAM']}]};
+const Hierarchies={WB_REVENUE:[{id:'HIER_GEO',nm:'Geography',levels:['region','country','city']},{id:'HIER_PROD',nm:'Products',levels:['category','product_line','sku']}]};
+
+// Data Flows
+const FLOWS=[
+{id:'FLOW_SALES',nm:'Sales Data Prep',ds:'Clean CSV + aggregate + output to Oracle',v:2,ownerNm:'Sarah Chen',
+ nodes:[
+   {id:'n1',type:'input_file',label:'Sales CSV',category:'input',icon:'📁',x:40,y:60,rows:12847,status:'success'},
+   {id:'n2',type:'clean_nulls',label:'Clean Nulls',category:'clean',icon:'🧹',x:240,y:60,rows:12612,status:'success'},
+   {id:'n3',type:'filter',label:'Filter amount > 100',category:'transform',icon:'🔍',x:440,y:60,rows:11843,status:'success'},
+   {id:'n4',type:'aggregate',label:'Sum by Region',category:'aggregate',icon:'Σ',x:640,y:60,rows:6,status:'success'},
+   {id:'n5',type:'output_oracle',label:'NB_STG_SALES_PREP',category:'output',icon:'📤',x:840,y:60,rows:6,status:'success'}
+ ],
+ edges:[{s:'n1',t:'n2'},{s:'n2',t:'n3'},{s:'n3',t:'n4'},{s:'n4',t:'n5'}]},
+{id:'FLOW_CUSTOMER',nm:'Customer Join + Profile',ds:'Join orders + customers with smart recommender',v:1,ownerNm:'Sarah Chen',
+ nodes:[
+   {id:'n1',type:'input_source',label:'Orders Table',category:'input',icon:'📊',x:40,y:40,rows:45821,status:'success'},
+   {id:'n2',type:'input_source',label:'Customers Table',category:'input',icon:'📊',x:40,y:160,rows:8421,status:'success'},
+   {id:'n3',type:'join',label:'Inner Join (customer_id)',category:'transform',icon:'⧓',x:280,y:100,rows:45821,status:'success'},
+   {id:'n4',type:'derive_column',label:'Derive LTV',category:'transform',icon:'ƒ',x:520,y:100,rows:45821,status:'success'},
+   {id:'n5',type:'output_cube',label:'Publish to Orders Cube',category:'output',icon:'📤',x:760,y:100,rows:45821,status:'success'}
+ ],
+ edges:[{s:'n1',t:'n3'},{s:'n2',t:'n3'},{s:'n3',t:'n4'},{s:'n4',t:'n5'}]}
+];
+
+const FLOW_RUNS=[
+{id:'RUN_1',flowId:'FLOW_SALES',status:'success',startedAt:'10:14:22',dur:2840,rows:12847,by:'Sarah Chen'},
+{id:'RUN_2',flowId:'FLOW_SALES',status:'success',startedAt:'09:14:18',dur:2710,rows:12421,by:'SCHEDULER'},
+{id:'RUN_3',flowId:'FLOW_SALES',status:'failed',startedAt:'08:14:09',dur:890,rows:0,by:'SCHEDULER',err:'filter node: column "amount" not found'},
+{id:'RUN_4',flowId:'FLOW_CUSTOMER',status:'success',startedAt:'07:30:00',dur:4120,rows:45821,by:'Sarah Chen'}
+];
+
+// Alerts
+const ALERTS=[
+{id:'ALERT_REV',nm:'Revenue Drop Warning',dashId:'DASH_REVENUE',widgetId:'w1',cube:'Orders',
+ cond:{measure:'total_revenue',operator:'lt',threshold:3500000},
+ freq:'0 */4 * * *',channels:['email','webhook'],recipients:['sarah.chen@acme.local'],
+ cooldown:60,enabled:true,lastTriggered:null,lastValue:4280000},
+{id:'ALERT_APAC',nm:'APAC Growth Milestone',dashId:'DASH_REVENUE',widgetId:'w4',cube:'Orders',
+ cond:{measure:'total_revenue',operator:'gte',threshold:2000000},
+ freq:'0 9 * * *',channels:['email','slack'],recipients:['sarah.chen@acme.local','#apac-team'],
+ cooldown:240,enabled:true,lastTriggered:'2025-03-14T09:00:00',lastValue:1420000},
+{id:'ALERT_CHURN',nm:'Monthly Churn Spike',dashId:null,widgetId:null,cube:'CustomerChurn',
+ cond:{measure:'churn_rate',operator:'pct_change_gt',threshold:15},
+ freq:'0 8 1 * *',channels:['email'],recipients:['retention-team@acme.local'],
+ cooldown:1440,enabled:false,lastTriggered:null,lastValue:2.4}
+];
+
+const ALERT_FIRINGS=[
+{id:'FIRE_1',alertId:'ALERT_APAC',firedAt:'2025-03-14 09:00:00',triggerValue:2140000,reason:'2140000 >= 2000000',status:'delivered'},
+{id:'FIRE_2',alertId:'ALERT_APAC',firedAt:'2025-02-18 09:00:00',triggerValue:2080000,reason:'2080000 >= 2000000',status:'delivered'}
+];
+
+// Subscriptions
+const SUBS=[
+{id:'SUB_1',type:'dashboard',targetId:'DASH_REVENUE',nm:'Q4 Revenue — Monday 9am',cron:'0 9 * * MON',
+ channels:['email'],recipients:['sarah.chen@acme.local','david.lee@acme.local'],format:'pdf',
+ enabled:true,lastDelivered:'2025-03-17 09:00:02',lastStatus:'success'},
+{id:'SUB_2',type:'widget',targetId:'DASH_REVENUE:w5',nm:'Regional Breakdown — Daily',cron:'0 17 * * *',
+ channels:['slack'],recipients:['https://hooks.slack.com/...'],format:'png',
+ enabled:true,lastDelivered:'2025-03-17 17:00:08',lastStatus:'success'},
+{id:'SUB_3',type:'dashboard',targetId:'DASH_REVENUE',nm:'Quarterly Review — 1st of quarter',cron:'0 8 1 1,4,7,10 *',
+ channels:['email','webhook'],recipients:['board@acme.local','https://ops.acme.local/webhook'],format:'pdf',
+ enabled:true,lastDelivered:'2025-01-01 08:00:15',lastStatus:'success'}
+];
+
+// Shapes library
+const SHAPES=[
+{id:'SH_1',nm:'circle',cat:'basic',svg:'<circle cx="12" cy="12" r="10" fill="currentColor"/>',sys:true},
+{id:'SH_2',nm:'square',cat:'basic',svg:'<rect x="2" y="2" width="20" height="20" fill="currentColor"/>',sys:true},
+{id:'SH_3',nm:'triangle',cat:'basic',svg:'<polygon points="12,2 22,22 2,22" fill="currentColor"/>',sys:true},
+{id:'SH_4',nm:'diamond',cat:'basic',svg:'<polygon points="12,2 22,12 12,22 2,12" fill="currentColor"/>',sys:true},
+{id:'SH_5',nm:'star',cat:'basic',svg:'<polygon points="12,2 15,9 22,9 16,14 19,22 12,17 5,22 8,14 2,9 9,9" fill="currentColor"/>',sys:true},
+{id:'SH_6',nm:'cross',cat:'basic',svg:'<polygon points="10,2 14,2 14,10 22,10 22,14 14,14 14,22 10,22 10,14 2,14 2,10 10,10" fill="currentColor"/>',sys:true},
+{id:'SH_7',nm:'arrow_up',cat:'directional',svg:'<polygon points="12,2 22,14 15,14 15,22 9,22 9,14 2,14" fill="currentColor"/>',sys:true},
+{id:'SH_8',nm:'arrow_down',cat:'directional',svg:'<polygon points="12,22 2,10 9,10 9,2 15,2 15,10 22,10" fill="currentColor"/>',sys:true}
+];
+
+// Comments
+const COMMENTS={};
+COMMENTS['DASH_REVENUE:w5']=[
+ {id:'CMT_1',userId:'USR_C1',userName:'Michael Kim',content:'Why is LATAM so low this quarter?',ctx:{region:'LATAM'},resolved:false,createdAt:'2025-03-14 10:14',replies:[
+   {id:'CMT_2',userId:'USR_A1',userName:'Sarah Chen',content:'Currency devaluation + two large deals pushed to Q1. Expecting recovery. @michael.kim',ctx:null,resolved:false,createdAt:'2025-03-14 11:22',replies:[]}
+ ]}
+];
+
+// Activity log
+const AL=[
+{tm:'10:14:22',us:'Sarah Chen',ac:'flow.run',rs:'FLOW_SALES',s:200,ms:2840},
+{tm:'10:12:01',us:'Admin',ac:'datasource.test',rs:'DS_PG',s:200,ms:89},
+{tm:'09:48:33',us:'Sarah Chen',ac:'lod.create',rs:'LOD_REGION_AVG',s:201,ms:112},
+{tm:'09:30:00',us:'Michael Kim',ac:'comment.create',rs:'DASH_REVENUE:w5',s:201,ms:78},
+{tm:'09:15:12',us:'Admin',ac:'alert.create',rs:'ALERT_REV',s:201,ms:156},
+{tm:'09:00:00',us:'SCHEDULER',ac:'subscription.deliver',rs:'SUB_1',s:200,ms:4212},
+{tm:'08:22:00',us:'Sarah Chen',ac:'hierarchy.create',rs:'HIER_GEO',s:201,ms:94}
+];
+
+let S={user:null,page:'login',modal:null,toast:null,wbTab:'sheets',activeWS:null,activeStoryPt:0,
+  activeFlow:null,selNode:null,cmtOpen:null,cmtWidget:null,lodText:'{FIXED [region]: SUM([total_revenue])}',lodResult:null,
+  showMeChart:null,drillState:{},playback:null,playbackIdx:0,alertDraft:null,subDraft:null,newFlowDraft:null,
+  profilingCol:null};
+
+function hp(p){if(!S.user)return false;const ps=RP[S.user.r]||[];return ps[0]==='*'||ps.includes(p)}
+function sb(s){const m={ACTIVE:'bdg-ok',APPROVED:'bdg-ok',ERROR:'bdg-er',REJECTED:'bdg-er',DRAFT:'bdg-ol',TESTING:'bdg-wn',PENDING_REVIEW:'bdg-wn',success:'bdg-ok',failed:'bdg-er',running:'bdg-wn',pending:'bdg-ol'};return`<span class="bdg ${m[s]||'bdg-ol'}">${s.replace('_',' ')}</span>`}
+function toast(m){S.toast=m;R();setTimeout(()=>{S.toast=null;R()},2500)}
+function dti(t){const c={postgres:'#336791',snowflake:'#29b5e8',bigquery:'#4285f4',oracle:'#f80000',databricks:'#ff3621',clickhouse:'#ffcc01'};return`<div style="width:32px;height:32px;background:${c[t]||'#6b7280'};border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;flex-shrink:0">${t.substring(0,2).toUpperCase()}</div>`}
+function nav(p){S.page=p;S.modal=null;S.cmtOpen=null;location.hash=p;R();window.scrollTo(0,0)}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1)||'login';if(h!==S.page){S.page=h;R()}});
+
+function visibleDashboards(){if(!S.user)return[];if(hp('dashboard.create'))return DA;return DA.filter(d=>{if(d.ownerId===S.user.id)return true;const shared=(SHARES[d.id]||[]).some(sh=>sh===S.user.id);return shared&&d.st==='APPROVED'});}
+
+// ═══ LOD PARSER (live validation in editor) ═══
+function parseLOD(raw){
+  const errors=[];const trimmed=(raw||'').trim();
+  if(!trimmed.startsWith('{')||!trimmed.endsWith('}'))return{errors:['LOD must be wrapped in { }'],expr:null};
+  const inner=trimmed.slice(1,-1).trim();
+  let depth=0,colonIdx=-1;
+  for(let i=0;i<inner.length;i++){if(inner[i]==='['||inner[i]==='(')depth++;else if(inner[i]===']'||inner[i]===')')depth--;else if(inner[i]===':'&&depth===0){colonIdx=i;break}}
+  if(colonIdx===-1)return{errors:['Missing ":" separator'],expr:null};
+  const dimsSec=inner.slice(0,colonIdx).trim();
+  const aggSec=inner.slice(colonIdx+1).trim();
+  const typeMatch=dimsSec.match(/^(FIXED|INCLUDE|EXCLUDE)\b/i);
+  if(!typeMatch)return{errors:['Must start with FIXED, INCLUDE, or EXCLUDE'],expr:null};
+  const type=typeMatch[1].toLowerCase();
+  const afterType=dimsSec.slice(typeMatch[0].length).trim();
+  const dims=[];const re=/\[([^\]]+)\]|([a-zA-Z_][a-zA-Z0-9_.]*)/g;let m;
+  while((m=re.exec(afterType))!==null)dims.push((m[1]||m[2]).trim());
+  if(dims.length===0&&type!=='exclude')errors.push('At least one dimension required');
+  const filterMatch=aggSec.match(/\bWHERE\s+(.+)$/i);
+  const aggPart=filterMatch?aggSec.slice(0,aggSec.length-filterMatch[0].length).trim():aggSec;
+  const aggMatch=aggPart.match(/^(\w+)\s*\(\s*(.+?)\s*\)\s*$/);
+  if(!aggMatch)return{errors:['Aggregation must be AGG(field)'],expr:null};
+  const aggName=aggMatch[1].toUpperCase();
+  const validAggs=['SUM','AVG','COUNT','COUNTD','MIN','MAX','MEDIAN'];
+  if(!validAggs.includes(aggName))errors.push(`Invalid aggregation "${aggName}". Use: ${validAggs.join(', ')}`);
+  const fieldRaw=aggMatch[2].trim();
+  const field=fieldRaw.startsWith('[')&&fieldRaw.endsWith(']')?fieldRaw.slice(1,-1):fieldRaw;
+  if(!field)errors.push('Measure field required');
+  return{errors,expr:{type,dimensions:dims,aggregation:aggName,measureField:field,filter:filterMatch?filterMatch[1].trim():null}};
+}
+
+// ═══ SHOW ME SCORING ═══
+function scoreShowMe(shelves,schemas){
+  const cols=shelves.columns||shelves.cols||[];const rows=shelves.rows||[];
+  const dims=[...cols,...rows].filter(n=>schemas.find(s=>s.name===n)?.fieldClass==='dimension').length;
+  const meas=[...cols,...rows].filter(n=>schemas.find(s=>s.name===n)?.fieldClass==='measure').length;
+  const temporal=[...cols,...rows].some(n=>schemas.find(s=>s.name===n)?.dataType==='date');
+  const geo=[...cols,...rows].some(n=>schemas.find(s=>s.name===n)?.dataType==='geo');
+  const rules=[
+    {type:'bar',icon:'📊',name:'Bar',score:dims===1&&meas===1?.95:dims>=1&&meas>=1?.6:.1,reason:'Categories vs measure'},
+    {type:'line',icon:'📈',name:'Line',score:temporal&&meas>=1?.95:meas>=1&&dims===1?.5:.1,reason:temporal?'Time-series':'Needs time dim'},
+    {type:'area',icon:'🏔',name:'Area',score:temporal&&meas>=1?.85:.2,reason:'Volume over time'},
+    {type:'stacked_bar',icon:'▪',name:'Stacked Bar',score:dims>=2&&meas===1?.8:.3,reason:'Composition'},
+    {type:'scatter',icon:'✦',name:'Scatter',score:meas===2?.9:meas>=2?.7:.1,reason:'Correlation'},
+    {type:'bubble',icon:'⊙',name:'Bubble',score:meas>=3?.85:.2,reason:'3 measures'},
+    {type:'heatmap',icon:'🔥',name:'Heatmap',score:dims===2&&meas===1?.85:.3,reason:'2D matrix'},
+    {type:'treemap',icon:'▤',name:'Treemap',score:dims>=1&&meas===1?.7:.2,reason:'Hierarchical'},
+    {type:'pie',icon:'⊙',name:'Pie',score:dims===1&&meas===1?.7:.2,reason:'Proportions'},
+    {type:'donut',icon:'◯',name:'Donut',score:dims===1&&meas===1?.7:.2,reason:'Proportions'},
+    {type:'kpi',icon:'🔢',name:'KPI',score:dims===0&&meas===1?.85:.1,reason:'Headline number'},
+    {type:'gauge',icon:'◷',name:'Gauge',score:dims===0&&meas===1?.6:.1,reason:'vs target'},
+    {type:'funnel',icon:'▼',name:'Funnel',score:dims===1&&meas===1?.75:.25,reason:'Stages'},
+    {type:'waterfall',icon:'▮',name:'Waterfall',score:dims===1&&meas===1?.65:.2,reason:'Cumulative'},
+    {type:'histogram',icon:'▬',name:'Histogram',score:meas===1&&dims===0?.9:.2,reason:'Distribution'},
+    {type:'box_plot',icon:'┋',name:'Box Plot',score:dims>=1&&meas>=1?.7:.2,reason:'Quartiles'},
+    {type:'map_choropleth',icon:'🌎',name:'Choropleth',score:geo&&meas>=1?.95:.1,reason:geo?'Geographic':'Needs geo dim'},
+    {type:'map_point',icon:'📍',name:'Map Points',score:geo?.85:.1,reason:'Lat/lng markers'},
+    {type:'density',icon:'⛅',name:'Density',score:meas===2?.75:.2,reason:'Dense scatter'},
+    {type:'table',icon:'▦',name:'Table',score:.5,reason:'Fallback'},
+    {type:'pivot',icon:'▦',name:'Pivot',score:dims>=2?.6:.3,reason:'Cross-tab'},
+    {type:'dual_axis',icon:'≡',name:'Dual-Axis',score:meas>=2&&temporal?.8:.3,reason:'2 measures, shared axis'},
+    {type:'sparkline',icon:'〜',name:'Sparkline',score:temporal&&meas===1?.65:.2,reason:'Inline trend'},
+    {type:'text',icon:'📝',name:'Text',score:.2,reason:'Static'}
+  ];
+  return rules.sort((a,b)=>b.score-a.score);
+}
+
+// ═══ CHART HELPERS ═══
+function svgBar(cats,vals,color,w,h){
+  const mx=Math.max(...vals.filter(v=>v!=null))||1,pad=40,bw=Math.min(36,(w-pad-10)/cats.length*.7),gap=(w-pad-10)/cats.length;
+  let bars='',labels='';
+  cats.forEach((c,i)=>{const v=vals[i]||0;const bh=(v/mx)*(h-50);const x=pad+i*gap+gap/2-bw/2;const y=h-30-bh;bars+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${color}" rx="2"><title>${c}: ${v}</title></rect>`;labels+=`<text x="${pad+i*gap+gap/2}" y="${h-10}" text-anchor="middle" fill="#6b7280" font-size="10" font-family="system-ui">${c}</text>`;});
+  const gr=[0,.25,.5,.75,1].map(p=>{const y=h-30-(h-50)*p;const v=Math.round(mx*p);return`<line x1="${pad}" y1="${y}" x2="${w}" y2="${y}" stroke="#e5e7eb" stroke-width=".5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" fill="#9ca3af" font-size="9" font-family="system-ui">${v>=1000?(v/1000).toFixed(0)+'K':v}</text>`}).join('');
+  return`<svg class="ch" viewBox="0 0 ${w} ${h}">${gr}${bars}${labels}</svg>`;
+}
+function svgLine(cats,vals,color,w,h,forecast){
+  const allVals=[...(vals||[]),...(forecast||[])].filter(v=>v!=null);
+  const mx=Math.max(...allVals)||1,mn=Math.min(...allVals);
+  const pad=45,ch=h-55;
+  const cvt=(v,i)=>({x:pad+i*((w-pad-10)/(cats.length-1||1)),y:15+ch-(((v-mn)/(mx-mn||1))*ch)});
+  const actualPts=cats.map((c,i)=>vals[i]!=null?cvt(vals[i],i):null).filter(Boolean);
+  const actualPoly=actualPts.map(p=>`${p.x},${p.y}`).join(' ');
+  let forecastPoly='',confBand='';
+  if(forecast){
+    const fcPts=cats.map((c,i)=>forecast[i]!=null?cvt(forecast[i],i):null).filter(Boolean);
+    forecastPoly=fcPts.map(p=>`${p.x},${p.y}`).join(' ');
+    if(fcPts.length>1){
+      const upper=fcPts.map(p=>`${p.x},${p.y-18}`).join(' ');
+      const lower=fcPts.map(p=>`${p.x},${p.y+18}`).reverse().join(' ');
+      confBand=`<polygon points="${upper} ${lower}" fill="${color}" opacity=".12"/>`;
+    }
+  }
+  const labels=cats.map((c,i)=>`<text x="${pad+i*((w-pad-10)/(cats.length-1||1))}" y="${h-10}" text-anchor="middle" fill="#6b7280" font-size="10">${c}</text>`).join('');
+  const dots=actualPts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${color}" stroke="#fff" stroke-width="1.5"/>`).join('');
+  const gr=[0,.25,.5,.75,1].map(p=>{const y=15+ch-ch*p;const v=(mn+(mx-mn)*p).toFixed(0);return`<line x1="${pad}" y1="${y}" x2="${w}" y2="${y}" stroke="#e5e7eb" stroke-width=".5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" fill="#9ca3af" font-size="9">${v}</text>`}).join('');
+  return`<svg class="ch" viewBox="0 0 ${w} ${h}">${gr}${confBand}<polyline points="${actualPoly}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/>${forecastPoly?`<polyline points="${forecastPoly}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="4,3" opacity=".6"/>`:''}${dots}${labels}${forecast?`<text x="${w-70}" y="18" fill="${color}" font-size="9" font-family="monospace">━━ actual  - - - forecast</text>`:''}</svg>`;
+}
+function svgSparkline(vals,color){
+  const w=100,h=28;const mx=Math.max(...vals),mn=Math.min(...vals);
+  const pts=vals.map((v,i)=>`${i*(w/(vals.length-1))},${h-(((v-mn)/(mx-mn||1))*h)}`).join(' ');
+  return`<svg viewBox="0 0 ${w} ${h}" style="width:100px;height:28px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5"/></svg>`;
+}
+function svgMap(regions){
+  // Fake world map: boxes for regions with heatmap fill
+  const w=500,h=260;
+  const regionData=[
+    {nm:'Americas',x:30,y:60,w:140,h:150,val:1560,cl:'#1e40af'},
+    {nm:'EMEA',x:210,y:50,w:130,h:130,val:980,cl:'#3b82f6'},
+    {nm:'APAC',x:360,y:60,w:110,h:140,val:1420,cl:'#1e40af'},
+    {nm:'ANZ',x:370,y:170,w:80,h:50,val:320,cl:'#93c5fd'}
+  ];
+  const maxV=Math.max(...regionData.map(r=>r.val));
+  const shapes=regionData.map(r=>{
+    const intensity=r.val/maxV;
+    const fill=`rgba(30,64,175,${0.2+intensity*.7})`;
+    return`<g><rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${fill}" stroke="#1e40af" stroke-width="1" rx="8"/><text x="${r.x+r.w/2}" y="${r.y+r.h/2-4}" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">${r.nm}</text><text x="${r.x+r.w/2}" y="${r.y+r.h/2+12}" text-anchor="middle" font-size="11" fill="#fff" font-family="monospace">$${(r.val/1000).toFixed(1)}M</text></g>`;
+  }).join('');
+  return`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:240px">${shapes}</svg>`;
+}
+function svgDensity(){
+  // 24x16 grid with gradient
+  const w=500,h=240,cols=24,rows=16;const cw=w/cols,ch=h/rows;
+  let cells='';
+  for(let x=0;x<cols;x++){for(let y=0;y<rows;y++){
+    const dx=x-12,dy=y-8;
+    const d1=Math.exp(-((dx+3)**2+dy**2)/30);
+    const d2=Math.exp(-((dx-5)**2+(dy-2)**2)/25);
+    const density=Math.min(1,d1+d2*0.7);
+    const colors=['#440154','#3b528b','#21918c','#5ec962','#fde725'];
+    const ci=Math.min(4,Math.floor(density*5));
+    cells+=`<rect x="${x*cw}" y="${y*ch}" width="${cw}" height="${ch}" fill="${colors[ci]}" opacity="${0.3+density*.7}"/>`;
+  }}
+  return`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:240px">${cells}</svg>`;
+}
+function svgHist(bins){
+  const mx=Math.max(...bins.map(b=>b.count))||1;
+  return bins.map(b=>`<div class="hist-bar" style="height:${(b.count/mx)*100}%" title="${b.lower.toFixed(0)}–${b.upper.toFixed(0)}: ${b.count}"></div>`).join('');
+}
+
+// ═══ RENDERERS ═══
+function rLogin(){return`<div class="lp"><div class="lc"><div class="lb"><span class="bx"></span><span style="font-weight:700;font-size:20px">NexusBI <span class="sb-v">v7</span></span></div><div class="lt">Welcome back</div><div class="ls">Enterprise BI with full Tableau parity</div><div class="fr"><label class="fl">Username</label><input class="ip" id="lu" value="admin"></div><div class="fr"><label class="fl">Password</label><input class="ip" id="lp" type="password" value="Admin@123!"></div><div id="le" style="color:var(--warm);font-size:12px;margin-bottom:10px;display:none"></div><button class="btn" style="width:100%;justify-content:center" onclick="doL()">Sign in →</button><div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);text-align:center"><b>Try:</b> admin / author1 / viewer1 (Admin@123! for admin · Test@123! others)</div></div></div>`}
+function doL(){const u=document.getElementById('lu').value,p=document.getElementById('lp').value;const f=U.find(x=>x.u===u&&x.p===p);if(!f){const e=document.getElementById('le');e.textContent='Invalid credentials';e.style.display='block';return}S.user=f;nav('home')}
+
+function sbar(){const u=S.user,its=[
+{l:'Overview',p:'home'},
+{l:'Data Sources',p:'datasources',pm:'datasource.view'},
+{l:'Data Flows',p:'flows',pm:'flow.view',nw:true},
+{l:'Workbooks',p:'workbooks',pm:'workbook.view'},
+{l:'Stories',p:'stories',pm:'story.view'},
+{l:'Explorer',p:'explorer',pm:'explorer.use'},
+{l:'Semantic Layer',p:'semantic',pm:'schema.view'},
+{l:'Dashboards',p:'dashboards',pm:'dashboard.view'},
+{l:'Review Queue',p:'checker',pm:'dashboard.approve'},
+{l:'Data Lineage',p:'lineage',pm:'lineage.view'}
+],coll=[
+{l:'Alerts',p:'alerts',pm:'alert.view',nw:true},
+{l:'Subscriptions',p:'subscriptions',pm:'subscription.manage',nw:true}
+],adm=[
+{l:'Shape Library',p:'admin-shapes',pm:'shape.manage',nw:true},
+{l:'Users',p:'admin-users',pm:'datasource.create'},
+{l:'Audit Log',p:'admin-audit',pm:'datasource.create'},
+{l:'Webhooks',p:'admin-webhooks',pm:'datasource.create'},
+{l:'Pre-Aggregations',p:'admin-preagg',pm:'datasource.create'}
+];
+const vi=its.filter(i=>!i.pm||hp(i.pm)),vc=coll.filter(i=>!i.pm||hp(i.pm)),va=adm.filter(i=>!i.pm||hp(i.pm));
+const m=(x)=>`<div class="sb-i ${S.page===x.p||S.page.startsWith(x.p+'-')||(x.p==='workbooks'&&S.page.startsWith('wb-'))||(x.p==='stories'&&S.page.startsWith('story-'))||(x.p==='dashboards'&&S.page.startsWith('dv-'))||(x.p==='flows'&&S.page.startsWith('flow-'))?'ac':''}" onclick="nav('${x.p}')"><span class="d"></span>${x.l}${x.nw?'<span class="nw">NEW</span>':''}</div>`;
+return`<aside class="sb"><div class="sb-br"><span class="bx bx-s"></span>NexusBI<span class="sb-v">v7</span></div><div class="sb-sec"><div class="sb-cat">Workspace</div>${vi.map(m).join('')}</div>${vc.length?`<div class="sb-sec"><div class="sb-cat">Collaboration</div>${vc.map(m).join('')}</div>`:''}${va.length?`<div class="sb-sec"><div class="sb-cat">Administration</div>${va.map(m).join('')}</div>`:''}<div class="sb-ft"><div style="font-weight:600;color:var(--ink);font-size:12px">${u.n}</div><div>${u.r} · <button onclick="S.user=null;nav('login')">Sign out</button></div></div></aside>`}
+
+function rHome(){const vis=visibleDashboards();return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Welcome to NexusBI v7</div><div class="pd">Full Tableau parity + data prep + alerts + subscriptions · Logged in as ${S.user.n}</div></div></div><div class="kr"><div class="kp"><div class="kl">Data Sources</div><div class="kv">${DS.length}</div><div class="kd up">${DS.filter(d=>d.st==='ACTIVE').length} active</div></div><div class="kp"><div class="kl">Data Flows</div><div class="kv">${FLOWS.length}</div><div class="kd up">↑ ${FLOW_RUNS.filter(r=>r.status==='success').length} successful runs</div></div><div class="kp"><div class="kl">Active Alerts</div><div class="kv">${ALERTS.filter(a=>a.enabled).length}</div><div class="kd">${ALERT_FIRINGS.length} fired this quarter</div></div><div class="kp"><div class="kl">Subscriptions</div><div class="kv">${SUBS.filter(s=>s.enabled).length}</div><div class="kd up">All delivering</div></div></div><div class="g2" style="margin-bottom:16px"><div class="cb"><div class="ct">Query Volume · Last 7 Days</div>${svgBar(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],[2120,2540,2380,3140,3620,2880,2610],'#1e40af',520,200)}</div><div class="cb"><div class="ct">Recent Activity</div>${AL.slice(0,6).map(a=>`<div style="font-size:11px;padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between"><span>${a.us} · <span style="font-family:monospace;font-size:10px">${a.ac}</span></span><span style="color:var(--muted)">${a.tm}</span></div>`).join('')}</div></div><div class="cb"><div class="ct">What's New in v7</div><div class="g4"><div style="padding:10px;background:var(--accent-lt);border-radius:6px"><b style="font-size:12px">🔀 Data Flows</b><div style="font-size:11px;color:var(--muted);margin-top:4px">Visual DAG pipeline editor with 30 node types. Oracle-native execution.</div></div><div style="padding:10px;background:var(--violet-lt);border-radius:6px"><b style="font-size:12px">⚡ LOD Expressions</b><div style="font-size:11px;color:var(--muted);margin-top:4px">FIXED, INCLUDE, EXCLUDE with live Oracle SQL compilation.</div></div><div style="padding:10px;background:var(--amber-lt);border-radius:6px"><b style="font-size:12px">🔔 Smart Alerts</b><div style="font-size:11px;color:var(--muted);margin-top:4px">12 operators. Threshold crossings. Webhook + email + Slack.</div></div><div style="padding:10px;background:var(--emerald-lt);border-radius:6px"><b style="font-size:12px">💬 Comments</b><div style="font-size:11px;color:var(--muted);margin-top:4px">Threaded discussions per widget. @mentions. Mark context preserved.</div></div></div></div></div>`}
+
+// ═══ DATA FLOWS ═══
+function rFlows(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Flows <span class="bdg bdg-new">NEW</span></div><div class="pd">Visual ETL pipelines · 30 node types · Oracle-native execution · DAG orchestration</div></div>${hp('flow.create')?`<button class="btn" onclick="newFlow()">+ New Flow</button>`:''}</div>
+<div class="g3" style="margin-bottom:20px">${FLOWS.map(f=>`<div class="cd" style="cursor:pointer" onclick="nav('flow-${f.id}')"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="font-weight:600;font-size:14px">${f.nm}</div>${sb('success')}</div><div style="font-size:12px;color:var(--muted);margin-bottom:10px">${f.ds}</div><div style="display:flex;gap:10px;font-size:11px;color:var(--muted);margin-bottom:8px;flex-wrap:wrap"><span>📦 ${f.nodes.length} nodes</span><span>→ ${f.edges.length} edges</span><span>v${f.v}</span></div><div style="display:flex;gap:6px"><button class="btn bg bs" style="flex:1" onclick="event.stopPropagation();nav('flow-${f.id}')">Open</button><button class="btn be bs" style="flex:1" onclick="event.stopPropagation();runFlow('${f.id}')">▶ Run</button></div></div>`).join('')}</div>
+<div class="cb"><div class="ct">Recent Flow Runs</div><div style="border:1px solid var(--line);border-radius:4px">${FLOW_RUNS.map(r=>{const flow=FLOWS.find(f=>f.id===r.flowId);return`<div class="run-row"><span class="bdg ${r.status==='success'?'bdg-ok':'bdg-er'}" style="font-size:9px">${r.status}</span><div><b>${flow?.nm||r.flowId}</b><div style="font-size:10px;color:var(--muted);font-family:monospace">${r.id} · by ${r.by}${r.err?' · '+r.err:''}</div></div><span style="font-family:monospace;font-size:11px;color:var(--muted)">${r.startedAt}</span><span style="font-family:monospace;font-size:11px;color:var(--muted)">${r.dur}ms</span><span style="font-family:monospace;font-size:11px;text-align:right">${r.rows.toLocaleString()} rows</span></div>`}).join('')}</div></div></div>`}
+
+function rFlow(fId){const flow=FLOWS.find(f=>f.id===fId);if(!flow)return`${sbar()}<div class="mn"><div class="pt">Flow not found</div></div>`;
+const selN=S.selNode?flow.nodes.find(n=>n.id===S.selNode):null;
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">flows / ${flow.nm}</div><div class="pt">${flow.nm}</div><div class="pd">${flow.ds} · v${flow.v}</div></div><div style="display:flex;gap:6px"><button class="btn bg bs" onclick="nav('flows')">← Back</button><button class="btn bs" onclick="validateFlow('${fId}')">✓ Validate</button><button class="btn be bs" onclick="runFlow('${fId}')">▶ Run</button><button class="btn bv bs" onclick="scheduleFlow('${fId}')">⏰ Schedule</button></div></div>
+<div style="display:grid;grid-template-columns:180px 1fr 240px;gap:14px">
+<div class="wp"><div class="wpt">Node Palette</div><div class="palette">
+<div class="palette-cat">Input</div><div class="palette-node" style="background:var(--accent-lt);border-color:var(--accent)">📁 File</div><div class="palette-node" style="background:var(--accent-lt);border-color:var(--accent)">📊 Source</div>
+<div class="palette-cat">Clean</div><div class="palette-node">🧹 Nulls</div><div class="palette-node">🔎 Dedupe</div><div class="palette-node">✎ Rename</div><div class="palette-node">↦ Type</div>
+<div class="palette-cat">Transform</div><div class="palette-node">🔍 Filter</div><div class="palette-node">⇅ Sort</div><div class="palette-node">⧓ Join</div><div class="palette-node">∪ Union</div><div class="palette-node">↻ Pivot</div><div class="palette-node">↺ Unpivot</div>
+<div class="palette-cat">Aggregate</div><div class="palette-node">Σ Agg</div><div class="palette-node">ƒ Derive</div>
+<div class="palette-cat">Output</div><div class="palette-node" style="background:var(--emerald-lt);border-color:var(--emerald)">📤 Oracle</div><div class="palette-node" style="background:var(--emerald-lt);border-color:var(--emerald)">⇒ Cube</div>
+</div></div>
+<div class="flow-canvas" id="flowCanvas">
+${renderFlowEdges(flow)}
+${flow.nodes.map(n=>renderFlowNode(n)).join('')}
+</div>
+<div class="wp">${selN?rNodeConfig(selN):'<div class="wpt">Select a node</div><div style="font-size:11px;color:var(--muted)">Click any node in the canvas to configure its parameters, see output schema, and view row counts.</div>'}</div>
+</div>
+<div style="margin-top:16px"><div class="ct">Run History for ${flow.nm}</div><div style="background:#fff;border:1px solid var(--line);border-radius:4px">${FLOW_RUNS.filter(r=>r.flowId===fId).map(r=>`<div class="run-row"><span class="bdg ${r.status==='success'?'bdg-ok':'bdg-er'}" style="font-size:9px">${r.status}</span><div><b>${r.id}</b><div style="font-size:10px;color:var(--muted)">by ${r.by}${r.err?' · '+r.err:''}</div></div><span style="font-family:monospace;font-size:11px">${r.startedAt}</span><span style="font-family:monospace;font-size:11px">${r.dur}ms</span><span style="font-family:monospace;font-size:11px;text-align:right">${r.rows.toLocaleString()} rows</span></div>`).join('')}</div></div>
+</div>`}
+
+function renderFlowNode(n){const catClass=`flow-node-${n.category}`;const sel=S.selNode===n.id?'sel':'';return`<div class="flow-node ${catClass} ${sel}" style="left:${n.x}px;top:${n.y}px" onclick="S.selNode='${n.id}';R()">
+<div class="flow-node-status ${n.status}"></div>
+<div class="flow-node-label"><span class="flow-node-icon">${n.icon}</span>${n.label}</div>
+<div class="flow-node-type">${n.type.replace(/_/g,' ')}</div>
+${n.rows!==undefined?`<div class="flow-node-rows">${n.rows.toLocaleString()} rows</div>`:''}
+</div>`}
+
+function renderFlowEdges(flow){const nodeMap=new Map(flow.nodes.map(n=>[n.id,n]));let svg='';flow.edges.forEach(e=>{const s=nodeMap.get(e.s),t=nodeMap.get(e.t);if(!s||!t)return;const x1=s.x+140,y1=s.y+28,x2=t.x,y2=t.y+28;const mx=(x1+x2)/2;svg+=`<path d="M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" stroke="#9ca3af" stroke-width="1.8" fill="none" marker-end="url(#arr)"/>`;});return`<svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9ca3af"/></marker></defs>${svg}</svg>`}
+
+function rNodeConfig(n){return`<div class="wpt">${n.icon} ${n.label}</div>
+<div style="font-size:10px;font-family:monospace;color:var(--muted);margin-bottom:10px">type: ${n.type}</div>
+<div style="font-size:11px;margin-bottom:6px"><b>Status:</b> ${sb(n.status)}</div>
+<div style="font-size:11px;margin-bottom:6px"><b>Rows:</b> ${n.rows?.toLocaleString()||'—'}</div>
+<div style="font-size:11px;margin-bottom:10px"><b>Staging:</b> <code style="font-size:10px">NB_FLOW_${n.id}</code></div>
+<hr style="margin:10px 0;border:0;border-top:1px solid var(--line)">
+<div style="font-size:11px;font-weight:600;margin-bottom:6px">Parameters</div>
+${n.type==='filter'?`<div class="fr"><label class="fl">Condition</label><input class="ip" value="amount > 100" style="font-family:monospace;font-size:11px"></div>`:''}
+${n.type==='aggregate'?`<div class="fr"><label class="fl">Group By</label><input class="ip" value="region"></div><div class="fr"><label class="fl">Aggregations</label><input class="ip" value="SUM(amount) AS total"></div>`:''}
+${n.type==='join'?`<div class="fr"><label class="fl">Left Key</label><input class="ip" value="customer_id"></div><div class="fr"><label class="fl">Right Key</label><input class="ip" value="customer_id"></div><div class="fr"><label class="fl">Type</label><select class="ip"><option>inner</option><option>left</option><option>right</option></select></div><button class="btn bv bs" style="width:100%" onclick="toast('Running join recommender: customer_id (match: 1.00 name + .98 overlap = .984)')">✨ Suggest Joins</button>`:''}
+${n.type==='input_file'||n.type==='input_source'?`<div class="fr"><label class="fl">Source</label><select class="ip"><option>production-warehouse</option><option>snowflake-finance</option></select></div>`:''}
+${n.type==='output_oracle'?`<div class="fr"><label class="fl">Target Table</label><input class="ip" value="NB_STG_SALES_PREP"></div>`:''}
+<hr style="margin:10px 0;border:0;border-top:1px solid var(--line)">
+<button class="btn bg bs" style="width:100%;margin-bottom:4px" onclick="profileNode('${n.id}')">📊 Profile Column</button>
+<button class="btn bs" style="width:100%;background:var(--warm);border-color:var(--warm)" onclick="toast('Node deleted')">🗑 Delete Node</button>`}
+
+function runFlow(fId){const flow=FLOWS.find(f=>f.id===fId);if(!flow)return;toast(`Flow "${flow.nm}" executing...`);flow.nodes.forEach((n,i)=>{setTimeout(()=>{n.status='running';R();},i*200);setTimeout(()=>{n.status='success';R();},(i+1)*400);});setTimeout(()=>toast(`✓ Flow "${flow.nm}" completed (${(flow.nodes.length*400)}ms)`),flow.nodes.length*400+100)}
+function validateFlow(fId){toast('✓ All 5 nodes valid · 0 errors · 0 warnings')}
+function scheduleFlow(fId){S.modal={t:'sched',fId};R()}
+function newFlow(){const id='FLOW_NEW_'+Date.now();FLOWS.push({id,nm:'Untitled Flow',ds:'',v:1,ownerNm:S.user.n,nodes:[],edges:[]});toast('Flow created');nav('flow-'+id)}
+function profileNode(nId){S.modal={t:'profile',nId};R()}
+
+// ═══ ALERTS ═══
+function rAlerts(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Alerts <span class="bdg bdg-new">NEW</span></div><div class="pd">Smart threshold monitoring · 12 operators · Cooldown-aware · Email/webhook/Slack/Teams</div></div>${hp('alert.create')?`<button class="btn" onclick="newAlert()">+ New Alert</button>`:''}</div>
+<div class="kr"><div class="kp"><div class="kl">Active Alerts</div><div class="kv">${ALERTS.filter(a=>a.enabled).length}</div><div class="kd up">of ${ALERTS.length} total</div></div><div class="kp"><div class="kl">Fired This Month</div><div class="kv">${ALERT_FIRINGS.length}</div><div class="kd">All delivered</div></div><div class="kp"><div class="kl">Avg Response Time</div><div class="kv">42<span style="font-size:14px;color:var(--muted)">s</span></div><div class="kd up">Well under cooldown</div></div><div class="kp"><div class="kl">Delivery Success</div><div class="kv">100<span style="font-size:14px;color:var(--muted)">%</span></div><div class="kd up">No failures</div></div></div>
+<div class="g3" style="margin-top:16px">${ALERTS.map(a=>{const opMap={gt:'>',gte:'≥',lt:'<',lte:'≤',eq:'=',pct_change_gt:'% change >',crossed_above:'crossed above',crossed_below:'crossed below'};return`<div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-weight:600;font-size:13px">${a.nm}</div><div style="font-size:10px;color:var(--muted);font-family:monospace;margin-top:2px">${a.id}</div></div><div>${a.enabled?'<span class="bdg bdg-ok">Enabled</span>':'<span class="bdg bdg-ol">Disabled</span>'}</div></div>
+<div style="background:var(--sunk);padding:8px 10px;border-radius:4px;font-family:monospace;font-size:11px;margin-bottom:8px">${a.cube}.${a.cond.measure} ${opMap[a.cond.operator]||a.cond.operator} ${a.cond.threshold.toLocaleString()}</div>
+<div style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px"><span>Check: <code>${a.freq}</code></span><span>Cooldown: ${a.cooldown}m</span></div>
+<div style="display:flex;gap:2px;flex-wrap:wrap;margin-bottom:8px">${a.channels.map(c=>`<span class="bdg bdg-vi" style="font-size:9px">${c}</span>`).join('')}</div>
+${a.lastTriggered?`<div style="font-size:10px;color:var(--warm);margin-bottom:6px">⚠ Last fired ${a.lastTriggered}</div>`:''}
+<div style="display:flex;gap:4px"><button class="btn bg bs" style="flex:1" onclick="editAlert('${a.id}')">Edit</button><button class="btn bs" style="flex:1" onclick="testAlert('${a.id}')">Test</button></div>
+</div>`}).join('')}</div>
+<div class="cb" style="margin-top:16px"><div class="ct">Alert Firing History</div><table class="dt"><thead><tr><th>Fired At</th><th>Alert</th><th>Trigger Value</th><th>Reason</th><th>Delivery</th></tr></thead><tbody>${ALERT_FIRINGS.map(f=>{const a=ALERTS.find(x=>x.id===f.alertId);return`<tr><td style="font-family:monospace;font-size:11px">${f.firedAt}</td><td>${a?.nm||f.alertId}</td><td style="font-family:monospace">${f.triggerValue.toLocaleString()}</td><td style="font-size:11px;color:var(--muted);font-family:monospace">${f.reason}</td><td>${sb(f.status)}</td></tr>`}).join('')}</tbody></table></div>
+</div>`}
+
+function testAlert(aId){const a=ALERTS.find(x=>x.id===aId);if(!a)return;const currentValue=Math.floor(Math.random()*5000000);const met=a.cond.operator==='lt'?currentValue<a.cond.threshold:currentValue>=a.cond.threshold;toast(`Test: currentValue=${currentValue.toLocaleString()} ${met?'✓ WOULD FIRE':'✗ would not fire'}`)}
+function newAlert(){S.alertDraft={nm:'',cube:'Orders',measure:'total_revenue',operator:'lt',threshold:'1000000',freq:'0 */4 * * *',channels:['email'],recipients:'',cooldown:60};S.modal={t:'alert'};R()}
+function editAlert(aId){const a=ALERTS.find(x=>x.id===aId);if(!a)return;S.alertDraft={...a,measure:a.cond.measure,operator:a.cond.operator,threshold:String(a.cond.threshold),recipients:a.recipients.join(',')};S.modal={t:'alert',id:aId};R()}
+function saveAlert(){const d=S.alertDraft;const id=S.modal.id||'ALERT_NEW_'+Date.now();const existing=ALERTS.find(x=>x.id===id);const alert={id,nm:d.nm,dashId:null,widgetId:null,cube:d.cube,cond:{measure:d.measure,operator:d.operator,threshold:parseFloat(d.threshold)},freq:d.freq,channels:d.channels,recipients:d.recipients.split(',').map(s=>s.trim()).filter(Boolean),cooldown:parseInt(d.cooldown),enabled:true,lastTriggered:null,lastValue:null};if(existing){Object.assign(existing,alert);toast('Alert updated');}else{ALERTS.push(alert);toast('Alert created');}S.modal=null;S.alertDraft=null;R()}
+
+// ═══ SUBSCRIPTIONS ═══
+function rSubs(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Subscriptions <span class="bdg bdg-new">NEW</span></div><div class="pd">Scheduled dashboard/widget delivery · Email · Webhook · Slack · Teams · PNG/PDF/CSV/XLSX</div></div>${hp('subscription.manage')?`<button class="btn" onclick="newSub()">+ New Subscription</button>`:''}</div>
+<div class="kr"><div class="kp"><div class="kl">Active</div><div class="kv">${SUBS.filter(s=>s.enabled).length}</div></div><div class="kp"><div class="kl">Deliveries This Month</div><div class="kv">127</div><div class="kd up">↑ 14 vs last</div></div><div class="kp"><div class="kl">Success Rate</div><div class="kv">98.4<span style="font-size:14px">%</span></div></div><div class="kp"><div class="kl">Avg Render Time</div><div class="kv">4.2<span style="font-size:14px">s</span></div></div></div>
+<div class="g3" style="margin-top:16px">${SUBS.map(s=>{const dash=DA.find(d=>d.id===s.targetId);return`<div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-weight:600;font-size:13px">${s.nm}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">→ ${dash?.nm||s.targetId}</div></div>${s.enabled?'<span class="bdg bdg-ok">Enabled</span>':'<span class="bdg bdg-ol">Paused</span>'}</div>
+<div style="background:var(--sunk);padding:6px 10px;border-radius:4px;font-family:monospace;font-size:11px;margin-bottom:8px">cron: ${s.cron}</div>
+<div style="font-size:11px;margin-bottom:8px"><b>Format:</b> <span class="bdg bdg-in">${s.format.toUpperCase()}</span> · <b>To:</b> ${s.recipients.length} recipient${s.recipients.length>1?'s':''}</div>
+<div style="display:flex;gap:2px;margin-bottom:8px">${s.channels.map(c=>`<span class="bdg bdg-vi" style="font-size:9px">${c}</span>`).join('')}</div>
+${s.lastDelivered?`<div style="font-size:10px;color:var(--emerald);margin-bottom:6px">✓ Last delivered ${s.lastDelivered}</div>`:''}
+<div style="display:flex;gap:4px"><button class="btn bg bs" style="flex:1" onclick="editSub('${s.id}')">Edit</button><button class="btn bs" style="flex:1" onclick="testSub('${s.id}')">Deliver Now</button></div>
+</div>`}).join('')}</div>
+</div>`}
+
+function testSub(sId){const s=SUBS.find(x=>x.id===sId);if(!s)return;toast(`Rendering ${s.format.toUpperCase()}... Delivering to ${s.channels.join(', ')}...`);setTimeout(()=>{s.lastDelivered=new Date().toISOString().slice(0,19).replace('T',' ');s.lastStatus='success';toast(`✓ Delivered to ${s.recipients.length} recipient(s) via ${s.channels.join(', ')}`);R();},1500)}
+function newSub(){S.subDraft={nm:'',type:'dashboard',targetId:'DASH_REVENUE',cron:'0 9 * * MON',channels:['email'],recipients:'',format:'pdf',emailSubject:''};S.modal={t:'sub'};R()}
+function editSub(sId){const s=SUBS.find(x=>x.id===sId);if(!s)return;S.subDraft={...s,recipients:s.recipients.join(',')};S.modal={t:'sub',id:sId};R()}
+function saveSub(){const d=S.subDraft;const id=S.modal.id||'SUB_'+Date.now();const existing=SUBS.find(x=>x.id===id);const sub={id,type:d.type,targetId:d.targetId,nm:d.nm,cron:d.cron,channels:d.channels,recipients:d.recipients.split(',').map(s=>s.trim()).filter(Boolean),format:d.format,enabled:true,lastDelivered:null,lastStatus:null};if(existing){Object.assign(existing,sub);toast('Subscription updated');}else{SUBS.push(sub);toast('Subscription created');}S.modal=null;S.subDraft=null;R()}
+
+// ═══ SHAPES ADMIN ═══
+function rShapesAdmin(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">admin</div><div class="pt">Shape Library <span class="bdg bdg-new">NEW</span></div><div class="pd">Custom SVG marks for scatter plots · ${SHAPES.length} shapes available · Upload your own</div></div><button class="btn" onclick="toast('SVG uploader opened')">+ Upload SVG</button></div>
+<div class="cb"><div class="ct">System Shapes</div><div class="shape-pick">${SHAPES.map(sh=>`<div class="shape-tile" onclick="toast('Shape: ${sh.nm}')"><svg viewBox="0 0 24 24" style="color:var(--accent)">${sh.svg}</svg><div style="font-size:10px;margin-top:4px">${sh.nm}</div></div>`).join('')}</div></div>
+<div class="cb" style="margin-top:14px"><div class="ct">Usage in Workbooks</div><table class="dt"><thead><tr><th>Shape</th><th>Used In</th><th>Workbook</th></tr></thead><tbody><tr><td><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:var(--accent)"><polygon points="12,2 22,12 12,22 2,12" fill="currentColor"/></svg> diamond</td><td>scatter (marks)</td><td>Revenue Analysis Workbook</td></tr><tr><td><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:var(--warm)"><polygon points="12,2 15,9 22,9 16,14 19,22 12,17 5,22 8,14 2,9 9,9" fill="currentColor"/></svg> star</td><td>scatter (marks)</td><td>Customer Segments</td></tr></tbody></table></div></div>`}
+
+// ═══ DASHBOARDS (with comments, map, density) ═══
+function rDash(){const vi=visibleDashboards();return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Dashboards</div><div class="pd">${vi.length} dashboards available</div></div>${hp('dashboard.create')?`<button class="btn" onclick="toast('New dashboard')">+ New Dashboard</button>`:''}</div><div class="g3">${vi.map(d=>`<div class="cd" style="cursor:pointer" onclick="nav('dv-${d.id}')"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="font-weight:600;font-size:14px">${d.nm}</div>${sb(d.st)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">${d.ds}</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>v${d.v} · ${d.on}</span><span style="font-family:monospace">${Object.keys(COMMENTS).filter(k=>k.startsWith(d.id+':')).length} 💬</span></div></div>`).join('')}</div></div>`}
+
+function rWidget(w,dashId){
+  const cmtCount=(COMMENTS[dashId+':'+w.id]||[]).reduce((s,c)=>s+1+(c.replies?.length||0),0);
+  const tools=`<div class="wg-tools"><button class="wg-tool ${cmtCount?'cmt-has':''}" onclick="event.stopPropagation();openComments('${dashId}','${w.id}')" title="Comments">💬 ${cmtCount||''}</button><button class="wg-tool" onclick="event.stopPropagation();toast('Subscribed to this widget')" title="Subscribe">🔔</button><button class="wg-tool" onclick="event.stopPropagation();newAlertForWidget('${w.id}')" title="Alert">⚡</button></div>`;
+  if(w.t==='kpi')return`<div class="wg" style="grid-column:span ${w.c}">${tools}<div style="font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">${w.ti}</div><div style="font-size:26px;font-weight:700;margin-top:4px">${w.vl}</div><div style="font-size:11px;color:${w.su.includes('↑')?'var(--emerald)':'var(--warm)'};margin-top:4px">${w.su}</div></div>`;
+  if(w.t==='bar')return`<div class="wg" style="grid-column:span ${w.c}">${tools}<div class="wt">${w.ti}</div>${svgBar(w.cats,w.vals,w.cl,560,220)}</div>`;
+  if(w.t==='line')return`<div class="wg" style="grid-column:span ${w.c}">${tools}<div class="wt">${w.ti}</div>${svgLine(w.cats,w.vals,w.cl,700,220,w.forecast)}</div>`;
+  if(w.t==='map')return`<div class="wg" style="grid-column:span ${w.c}">${tools}<div class="wt">${w.ti}</div><div class="map-wr">${svgMap()}<div class="map-legend"><span style="font-size:9px">$0</span><span class="map-legend-swatch" style="background:rgba(30,64,175,.2)"></span><span class="map-legend-swatch" style="background:rgba(30,64,175,.55)"></span><span class="map-legend-swatch" style="background:rgba(30,64,175,.9)"></span><span style="font-size:9px">$1.6M</span></div></div></div>`;
+  if(w.t==='tbl')return`<div class="wg" style="grid-column:span ${w.c}">${tools}<div class="wt">${w.ti}</div><table class="dt"><thead><tr>${w.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${w.rows.map((r,i)=>`<tr>${r.map((c,j)=>{if(j===2&&c.startsWith('spark'))return`<td>${svgSparkline([30,45,38,50,65,62,78][0]?[30+i*10,45+i*8,38+i*12,50+i*5,65+i*7,62+i*10,78+i*12]:[20,30,25,40],'#1e40af')}</td>`;return`<td>${c}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return'';
+}
+function rDV(id){const d=DA.find(x=>x.id===id);if(!d)return`${sbar()}<div class="mn"><div class="pt">Not found</div></div>`;
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">dashboards / ${d.nm}</div><div class="pt">${d.nm}</div><div class="pd">${d.ds}</div></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${sb(d.st)}<button class="btn bg bs" onclick="newAlertForWidget('w1')">🔔 Alert</button><button class="btn bg bs" onclick="newSubForDash('${id}')">✉ Subscribe</button>${hp('dashboard.export')?`<button class="btn bg bs" onclick="toast('Downloading PDF...')">📥 Export</button>`:''}${hp('dashboard.edit')?`<button class="btn bs" onclick="nav('de-${id}')">✏ Edit</button>`:''}</div></div>
+<div class="nl"><span style="color:var(--violet);font-size:14px">✦</span><input placeholder="Ask: 'show Q3 APAC revenue above 1M'" id="nli"><button class="btn bs bv" onclick="aNL()">Apply</button></div>
+<div id="nlc" style="margin-bottom:12px"></div>
+<div class="dg">${d.w.map(w=>rWidget(w,id)).join('')}</div>
+${S.cmtOpen?rCommentSide(S.cmtOpen.dashId,S.cmtOpen.widgetId):''}
+</div>`}
+function newAlertForWidget(wId){const widget=DA[0].w.find(w=>w.id===wId);S.alertDraft={nm:widget?.ti+' Alert',cube:'Orders',measure:'total_revenue',operator:'lt',threshold:'3500000',freq:'0 */4 * * *',channels:['email'],recipients:S.user.e,cooldown:60};S.modal={t:'alert'};R()}
+function newSubForDash(dId){const d=DA.find(x=>x.id===dId);S.subDraft={nm:d.nm+' — Weekly',type:'dashboard',targetId:dId,cron:'0 9 * * MON',channels:['email'],recipients:S.user.e,format:'pdf',emailSubject:''};S.modal={t:'sub'};R()}
+
+// ═══ COMMENT SIDEBAR ═══
+function openComments(dashId,wId){S.cmtOpen={dashId,widgetId:wId};R()}
+function rCommentSide(dashId,wId){const key=dashId+':'+wId;const cmts=COMMENTS[key]||[];return`<div class="cmt-side"><div class="cmt-hdr"><div><div style="font-weight:600;font-size:13px">💬 Comments</div><div style="font-size:10px;color:var(--muted);font-family:monospace">${wId} · ${cmts.reduce((s,c)=>s+1+(c.replies?.length||0),0)} comment${cmts.length!==1?'s':''}</div></div><button class="btn bg bs" onclick="S.cmtOpen=null;R()">✕</button></div>
+<div class="cmt-body">${cmts.length===0?'<div style="text-align:center;color:var(--muted);font-size:12px;padding:20px">No comments yet. Start the conversation!</div>':cmts.map(c=>renderCmt(c)).join('')}</div>
+<div class="cmt-foot"><textarea class="ip" id="cmtNew" placeholder="Add a comment... use @username to mention" rows="2"></textarea><div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><span style="font-size:10px;color:var(--muted)">Mark context: filters will be preserved</span><button class="btn bs" onclick="postCmt('${dashId}','${wId}')">Post →</button></div></div></div>`}
+function renderCmt(c,isReply){const rendered=c.content.replace(/@([a-z0-9_.]+)/gi,'<span class="mention">@$1</span>');return`<div class="cmt ${isReply?'cmt-reply':''}"><div class="cmt-meta"><span><b>${c.userName}</b></span><span>${c.createdAt}</span></div><div class="cmt-content">${rendered}</div>${c.ctx?`<div class="cmt-ctx">context: ${Object.entries(c.ctx).map(([k,v])=>`${k}=${v}`).join(' · ')}</div>`:''}<div class="cmt-actions">${!isReply?`<button class="cmt-action" onclick="replyTo('${c.id}')">Reply</button>`:''}${!c.resolved?`<button class="cmt-action" onclick="resolveCmt('${c.id}')">Resolve</button>`:'<span style="color:var(--emerald);font-size:10px">✓ Resolved</span>'}</div>${(c.replies||[]).map(r=>renderCmt(r,true)).join('')}</div>`}
+function postCmt(dashId,wId){const t=document.getElementById('cmtNew');if(!t||!t.value.trim())return;const key=dashId+':'+wId;if(!COMMENTS[key])COMMENTS[key]=[];const mentions=[...t.value.matchAll(/@([a-z0-9_.]+)/gi)].map(m=>m[1]);COMMENTS[key].push({id:'CMT_'+Date.now(),userId:S.user.id,userName:S.user.n,content:t.value,ctx:null,resolved:false,createdAt:new Date().toISOString().slice(0,16).replace('T',' '),replies:[]});if(mentions.length)toast(`Notified @${mentions.join(', @')}`);else toast('Comment posted');t.value='';R()}
+function replyTo(cId){toast('Reply mode — (demo: adds reply)')}
+function resolveCmt(cId){Object.values(COMMENTS).forEach(list=>list.forEach(c=>{if(c.id===cId)c.resolved=true;c.replies?.forEach(r=>{if(r.id===cId)r.resolved=true})}));toast('Comment resolved');R()}
+
+// ═══ WORKBOOKS (with LOD + Hierarchies + Show Me + Table Calcs) ═══
+function rWorkbooks(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Workbooks</div><div class="pd">Personal workspaces · Worksheets · Calc fields · Parameters · LOD · Hierarchies</div></div>${hp('workbook.create')?'<button class="btn" onclick="newWorkbook()">+ New Workbook</button>':''}</div><div class="g3">${WB.map(wb=>`<div class="cd"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="font-weight:600;font-size:14px;cursor:pointer" onclick="nav('wb-${wb.id}')">${wb.nm}</div>${wb.pub?'<span class="bdg bdg-ok">Published</span>':'<span class="bdg bdg-ol">Draft</span>'}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">${wb.ds}</div><div style="font-size:11px;color:var(--muted);margin-bottom:8px">v${wb.v} · ${wb.ownerNm}</div><div style="display:flex;gap:4px"><button class="btn bg bs" style="flex:1" onclick="nav('wb-${wb.id}')">✏ Edit</button></div></div>`).join('')}</div></div>`}
+function newWorkbook(){const id='WB_'+Date.now();WB.push({id,nm:'Untitled',ds:'',ownerId:S.user.id,ownerNm:S.user.n,pub:false,v:1,tg:''});WSheets[id]=[];CalcFields[id]=[];LodFields[id]=[];Params[id]=[];Hierarchies[id]=[];toast('Workbook created');nav('wb-'+id)}
+
+function rWBE(wbId){const wb=WB.find(x=>x.id===wbId);if(!wb)return`${sbar()}<div class="mn"><div class="pt">Workbook not found</div></div>`;
+const sheets=WSheets[wbId]||[];const calc=CalcFields[wbId]||[];const lod=LodFields[wbId]||[];const params=Params[wbId]||[];const hier=Hierarchies[wbId]||[];
+if(!S.activeWS&&sheets.length)S.activeWS=sheets[0].id;
+const aws=sheets.find(s=>s.id===S.activeWS);
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">workbooks / ${wb.nm}</div><div class="pt">${wb.nm}</div><div class="pd">v${wb.v} · ${sheets.length} sheets · ${calc.length} calc · ${lod.length} LOD · ${params.length} params · ${hier.length} hierarchies</div></div><div style="display:flex;gap:6px"><button class="btn bg bs" onclick="nav('workbooks')">← Back</button><button class="btn bs" onclick="toast('Published')">📤 Publish</button></div></div>
+<div class="tabs">
+<button class="tab ${S.wbTab==='sheets'?'ac':''}" onclick="S.wbTab='sheets';R()">📊 Worksheets (${sheets.length})</button>
+<button class="tab ${S.wbTab==='calc'?'ac':''}" onclick="S.wbTab='calc';R()">ƒ Calc Fields (${calc.length})</button>
+<button class="tab ${S.wbTab==='lod'?'ac':''}" onclick="S.wbTab='lod';R()">⚡ LOD Expressions (${lod.length})</button>
+<button class="tab ${S.wbTab==='hier'?'ac':''}" onclick="S.wbTab='hier';R()">🔽 Hierarchies (${hier.length})</button>
+<button class="tab ${S.wbTab==='params'?'ac':''}" onclick="S.wbTab='params';R()">🎛 Parameters (${params.length})</button>
+</div>
+${S.wbTab==='sheets'?rWBSheets(wb,sheets,aws):''}
+${S.wbTab==='calc'?rWBCalc(wb,calc):''}
+${S.wbTab==='lod'?rWBLod(wb,lod):''}
+${S.wbTab==='hier'?rWBHier(wb,hier):''}
+${S.wbTab==='params'?rWBParams(wb,params):''}
+</div>`}
+
+function rWBSheets(wb,sheets,aws){return`<div style="display:grid;grid-template-columns:200px 1fr 240px;gap:14px;min-height:500px">
+<div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:12px;font-weight:700">Worksheets</div><button class="btn bg bs" style="padding:2px 8px" onclick="newWS('${wb.id}')">+</button></div>${sheets.length===0?'<div style="font-size:11px;color:var(--muted);padding:8px">No sheets</div>':sheets.map(s=>`<div style="padding:8px 10px;font-size:12px;cursor:pointer;border-radius:4px;margin-bottom:2px;${s.id===S.activeWS?'background:var(--accent-lt);color:var(--accent);font-weight:600':''}" onclick="S.activeWS='${s.id}';R()">${s.nm}</div>`).join('')}</div>
+${aws?rWSEd(wb,aws):'<div style="padding:48px;text-align:center;color:var(--muted)">Create a worksheet</div>'}
+${aws?rShowMe(aws):''}
+</div>`}
+
+function rWSEd(wb,ws){const dims=['region','product_category','customer_id','order_date','status'];const measures=['total_revenue','order_count','avg_order_value','margin'];return`<div><div style="display:flex;justify-content:space-between;margin-bottom:14px"><input class="ip" value="${ws.nm}" style="max-width:280px;font-size:16px;font-weight:600" oninput="(WSheets['${wb.id}'].find(x=>x.id==='${ws.id}')||{}).nm=this.value"><select class="ip" style="max-width:120px" onchange="(WSheets['${wb.id}'].find(x=>x.id==='${ws.id}')||{}).ct=this.value;R()">${['bar','line','area','pie','scatter','heatmap','table','map_choropleth','density'].map(t=>`<option value="${t}" ${t===ws.ct?'selected':''}>${t.toUpperCase()}</option>`).join('')}</select></div>
+<div style="display:grid;grid-template-columns:180px 1fr;gap:12px">
+<div class="fs-pane"><div class="fs-cat">Dimensions</div>${dims.map(d=>`<div class="fs-it">🏷 ${d}</div>`).join('')}<div class="fs-cat">Measures</div>${measures.map(m=>`<div class="fs-it measure">Σ ${m}</div>`).join('')}<div class="fs-cat" style="color:var(--violet)">LOD Fields</div>${(LodFields[wb.id]||[]).map(l=>`<div class="fs-it" style="color:var(--violet);font-style:italic">⚡ ${l.nm}</div>`).join('')}</div>
+<div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+<div class="shelf"><div class="shelf-l">Columns</div>${ws.shelves.cols.map(c=>`<span class="chip">${c} ✕</span>`).join('')||'<span style="color:var(--muted2);font-size:11px">drop here</span>'}</div>
+<div class="shelf"><div class="shelf-l">Rows</div>${ws.shelves.rows.map(r=>`<span class="chip">${r} ✕</span>`).join('')||'<span style="color:var(--muted2);font-size:11px">drop here</span>'}</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+<div class="shelf"><div class="shelf-l">Color</div>${ws.shelves.color?`<span class="chip" style="background:var(--amber-lt);color:var(--amber)">${ws.shelves.color} ✕</span>`:'<span style="color:var(--muted2);font-size:11px">—</span>'}</div>
+<div class="shelf"><div class="shelf-l">Size</div><span style="color:var(--muted2);font-size:11px">—</span></div>
+<div class="shelf"><div class="shelf-l">Shape</div><span style="color:var(--muted2);font-size:11px" onclick="toast('Shape picker opened')">—</span></div>
+<div class="shelf"><div class="shelf-l">Pages</div><span style="color:var(--muted2);font-size:11px" onclick="S.playback={field:'month',idx:0,vals:['Jan','Feb','Mar','Apr','May','Jun']};R()">month →</span></div>
+</div>
+<div class="cb" style="min-height:280px"><div class="wt">${ws.nm} · Preview</div>${ws.ct==='bar'?svgBar(['APAC','EMEA','Americas','ANZ'],[1420,980,1560,320],'#1e40af',500,220):ws.ct==='line'?svgLine(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],[120,180,150,210,170,240,null,null,null],'#c2410c',500,220,[null,null,null,null,null,240,260,285,310]):ws.ct==='map_choropleth'?svgMap():ws.ct==='density'?svgDensity():'<div style="text-align:center;padding:60px;color:var(--muted)">Preview: '+ws.ct+'</div>'}</div>
+${S.playback?rPlayback():''}
+<div style="margin-top:8px;padding:10px;background:var(--sunk);border-left:3px solid var(--violet);font-size:11px;font-family:monospace"><b>Cube:</b> ${ws.cube} · Drag fields · Right-click measure for <b>table calcs</b> (Running Total, % of Total, Rank, Moving Avg, Z-Score, N-tile)</div>
+</div></div></div>`}
+
+function rShowMe(ws){const schemas=[{name:'region',fieldClass:'dimension',dataType:'string',cardinality:6},{name:'country',fieldClass:'dimension',dataType:'geo',cardinality:45},{name:'order_date',fieldClass:'dimension',dataType:'date'},{name:'total_revenue',fieldClass:'measure',dataType:'number'}];const recs=scoreShowMe(ws.shelves,schemas);const best=recs[0];return`<div class="wp"><div class="wpt">Show Me</div><div style="font-size:10px;color:var(--muted);margin-bottom:8px">Based on current shelves</div><div class="sm-grid">${recs.slice(0,20).map((r,i)=>{const cls=i===0?'best':r.score>=.4?'compat':'incompat';return`<div class="sm-tile ${cls}" onclick="toast('Switch to ${r.name}')"><span class="sm-tile-score">${(r.score*100).toFixed(0)}</span><span class="sm-tile-icon">${r.icon}</span><div class="sm-tile-name">${r.name}</div><div class="sm-tile-reason">${r.reason}</div></div>`}).join('')}</div><div style="margin-top:10px;padding:8px;background:var(--accent-lt);border-radius:4px;font-size:10px;color:var(--accent)"><b>Recommendation:</b> ${best.name} (${(best.score*100).toFixed(0)}% fit)</div></div>`}
+
+function rPlayback(){if(!S.playback)return'';const p=S.playback;const pct=(p.idx/(p.vals.length-1))*100;return`<div class="pp-ctrl"><button class="btn bg bs" onclick="toast('Playing...')">▶</button><button class="btn bg bs" onclick="S.playback=null;R()">✕</button><div style="font-size:11px;min-width:80px"><b>${p.field}:</b> ${p.vals[p.idx]}</div><div class="pp-scrub"><div class="pp-scrub-f" style="width:${pct}%"></div><div class="pp-scrub-t" style="left:${pct}%">${p.vals[p.idx]}</div></div><button class="btn bg bs" onclick="if(S.playback)S.playback.idx=(S.playback.idx+1)%S.playback.vals.length;R()">→</button><span style="font-size:10px;color:var(--muted)">${p.idx+1}/${p.vals.length}</span></div>`}
+
+function rWBCalc(wb,calc){return`<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div><div style="font-weight:600">Calculated Fields</div><div style="font-size:12px;color:var(--muted)">SQL expressions evaluated per workbook</div></div><button class="btn" onclick="toast('Calc editor')">+ New Calc</button></div>${calc.length===0?'<div style="padding:48px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line2)">No calcs yet</div>':`<div style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff"><table class="dt"><thead><tr><th>Name</th><th>Type</th><th>Expression</th><th>Status</th></tr></thead><tbody>${calc.map(f=>`<tr><td style="font-family:monospace">${f.nm}</td><td><span class="bdg bdg-wn">${f.ft}</span></td><td style="font-family:monospace;font-size:11px;color:var(--muted)">${f.expr}</td><td>${f.valid?'<span class="bdg bdg-ok">✓ Valid</span>':'<span class="bdg bdg-er">✗ Error</span>'}</td></tr>`).join('')}</tbody></table></div>`}`}
+
+function rWBLod(wb,lod){const result=parseLOD(S.lodText);return`<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div><div style="font-weight:600">LOD Expressions <span class="bdg bdg-new" style="font-size:9px">NEW</span></div><div style="font-size:12px;color:var(--muted)">Level-of-detail expressions: FIXED, INCLUDE, EXCLUDE</div></div></div>
+<div class="g2">
+<div><div class="cb"><div class="ct">New LOD Expression · Live Parser</div><div class="fr"><label class="fl">Field Name</label><input class="ip" placeholder="avg_region_revenue" id="lodName"></div><div class="fr"><label class="fl">Expression</label><textarea class="ip" id="lodExpr" oninput="S.lodText=this.value;rLodLive()" rows="3" style="font-family:monospace">${S.lodText}</textarea><div class="flh">Grammar: <code>{FIXED|INCLUDE|EXCLUDE [dim, ...]: AGG([field]) WHERE filter}</code></div></div><div id="lodLive">${result.errors.length?`<div class="lod-errors">✗ ${result.errors.join(' · ')}</div>`:`<div class="lod-ok">✓ Valid · <b>Type:</b> ${result.expr.type.toUpperCase()} · <b>Dims:</b> ${result.expr.dimensions.join(', ')} · <b>Agg:</b> ${result.expr.aggregation}(${result.expr.measureField})</div><div class="lod-preview"><b>Compiled Oracle SQL:</b><br>${compileLodToSQL(result.expr,wb.id).replace(/\n/g,'<br>').replace(/\s\s/g,'&nbsp;&nbsp;')}</div>`}</div><button class="btn" style="margin-top:10px" onclick="saveLod('${wb.id}')" ${result.errors.length?'disabled':''}>💾 Save LOD Field</button></div></div>
+<div><div class="cb"><div class="ct">Existing LOD Fields</div>${lod.length===0?'<div style="color:var(--muted);font-size:12px">None yet</div>':lod.map(l=>`<div style="padding:10px;border:1px solid var(--line);border-radius:4px;margin-bottom:8px"><div style="font-weight:600;font-size:12px">${l.nm}</div><div style="font-family:monospace;font-size:11px;color:var(--violet);margin-top:4px">${l.expr}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">type: ${l.parsed.type} · dims: ${l.parsed.dimensions.join(', ')} · agg: ${l.parsed.aggregation}</div></div>`).join('')}</div>
+<div class="cb" style="margin-top:14px"><div class="ct">Examples</div><div style="font-family:monospace;font-size:11px;line-height:1.7;color:var(--muted)">
+<div onclick="S.lodText='{FIXED [region]: SUM([total_revenue])}';R()" style="cursor:pointer;padding:4px;border-radius:3px" onmouseover="this.style.background='var(--sunk)'" onmouseout="this.style.background=''"><b style="color:var(--accent)">FIXED:</b> {FIXED [region]: SUM([total_revenue])}</div>
+<div onclick="S.lodText='{INCLUDE [product_category]: AVG([margin])}';R()" style="cursor:pointer;padding:4px;border-radius:3px" onmouseover="this.style.background='var(--sunk)'" onmouseout="this.style.background=''"><b style="color:var(--violet)">INCLUDE:</b> {INCLUDE [product_category]: AVG([margin])}</div>
+<div onclick="S.lodText='{EXCLUDE [order_date]: COUNTD([customer_id])}';R()" style="cursor:pointer;padding:4px;border-radius:3px" onmouseover="this.style.background='var(--sunk)'" onmouseout="this.style.background=''"><b style="color:var(--warm)">EXCLUDE:</b> {EXCLUDE [order_date]: COUNTD([customer_id])}</div>
+<div onclick="S.lodText='{FIXED [region], [category]: SUM([revenue]) WHERE status = \\'paid\\'}';R()" style="cursor:pointer;padding:4px;border-radius:3px" onmouseover="this.style.background='var(--sunk)'" onmouseout="this.style.background=''"><b style="color:var(--emerald)">WITH FILTER:</b> {FIXED [region], [category]: SUM([revenue]) WHERE status='paid'}</div>
+</div></div></div>
+</div>`}
+function rLodLive(){} // oninput triggers full R() via onchange
+
+function compileLodToSQL(expr,wbId){
+  if(!expr||!expr.type)return'';const cube='ORDERS';const alias=`lod_${Date.now().toString(36)}`;
+  const aggMap={SUM:'SUM',AVG:'AVG',COUNT:'COUNT',COUNTD:'COUNT(DISTINCT',MIN:'MIN',MAX:'MAX',MEDIAN:'MEDIAN'};
+  const fn=aggMap[expr.aggregation]||'SUM';
+  const closeParen=expr.aggregation==='COUNTD'?')':'';
+  const aggExpr=`${fn}("${expr.measureField.toUpperCase()}"${closeParen})`;
+  const filterClause=expr.filter?` WHERE ${expr.filter}`:'';
+  if(expr.type==='fixed'){
+    const groupCols=expr.dimensions.map(d=>`"${d.toUpperCase()}"`).join(', ');
+    return `WITH ${alias}_cte AS (\n  SELECT ${groupCols},\n         ${aggExpr} AS "${alias.toUpperCase()}"\n  FROM ${cube}${filterClause}\n  GROUP BY ${groupCols}\n)\nSELECT base.*, t."${alias.toUpperCase()}"\nFROM (<base_query>) base\nLEFT JOIN ${alias}_cte t ON ${expr.dimensions.map(d=>`base."${d.toUpperCase()}" = t."${d.toUpperCase()}"`).join(' AND ')}`;
+  }
+  if(expr.type==='include'){
+    const incCols=expr.dimensions.map(d=>`"${d.toUpperCase()}"`).join(', ');
+    return `WITH ${alias}_inner AS (\n  SELECT <viz_dims>, ${incCols},\n         ${aggExpr} AS inner_val\n  FROM ${cube}${filterClause}\n  GROUP BY <viz_dims>, ${incCols}\n),\n${alias}_cte AS (\n  SELECT <viz_dims>, ${fn}(inner_val) AS "${alias.toUpperCase()}"\n  FROM ${alias}_inner\n  GROUP BY <viz_dims>\n)`;
+  }
+  const excCols=expr.dimensions.map(d=>`"${d.toUpperCase()}"`).join(', ');
+  return `WITH ${alias}_cte AS (\n  SELECT <viz_dims minus [${expr.dimensions.join(', ')}]>,\n         ${aggExpr} AS "${alias.toUpperCase()}"\n  FROM ${cube}${filterClause}\n  GROUP BY <viz_dims minus ${excCols}>\n)`;
+}
+function saveLod(wbId){const result=parseLOD(S.lodText);const nm=document.getElementById('lodName')?.value?.trim();if(!nm){toast('Name required');return}if(result.errors.length){toast('Fix errors first');return}if(!LodFields[wbId])LodFields[wbId]=[];LodFields[wbId].push({id:'LOD_'+Date.now(),nm,expr:S.lodText,valid:true,parsed:result.expr});toast('✓ LOD field saved');R()}
+
+function rWBHier(wb,hier){return`<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div><div style="font-weight:600">Drill-Down Hierarchies <span class="bdg bdg-new" style="font-size:9px">NEW</span></div><div style="font-size:12px;color:var(--muted)">Ordered dimension paths for right-click drill-down</div></div><button class="btn" onclick="newHier('${wb.id}')">+ New Hierarchy</button></div>
+<div class="g2">${hier.map(h=>`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div style="font-weight:600;font-size:14px">🔽 ${h.nm}</div><div style="font-size:10px;color:var(--muted);font-family:monospace">${h.id}</div></div><button class="btn bg bs" onclick="toast('Edit ${h.nm}')">Edit</button></div><div style="display:flex;align-items:center;gap:0;flex-wrap:wrap">${h.levels.map((lv,i)=>`<span class="chip" style="margin:2px">L${i}: ${lv}</span>${i<h.levels.length-1?'<span style="color:var(--muted);margin:0 4px">→</span>':''}`).join('')}</div><div style="margin-top:10px;padding:8px;background:var(--sunk);font-size:11px;border-left:3px solid var(--accent)">Right-click any mark in charts using <code>${h.levels[0]}</code> to drill down through ${h.levels.length} levels.</div></div>`).join('')}</div>`}
+function newHier(wbId){const lv=prompt('Levels (comma separated, e.g. region,country,city):','region,country,city');if(!lv)return;const nm=prompt('Hierarchy name:','New Hierarchy');if(!nm)return;if(!Hierarchies[wbId])Hierarchies[wbId]=[];Hierarchies[wbId].push({id:'HIER_'+Date.now(),nm,levels:lv.split(',').map(s=>s.trim())});toast('Hierarchy created');R()}
+
+function rWBParams(wb,params){return`<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div><div style="font-weight:600">Parameters</div><div style="font-size:12px;color:var(--muted)">User-input variables</div></div><button class="btn" onclick="toast('New param')">+ New Parameter</button></div>${params.length===0?'<div style="padding:48px;text-align:center;color:var(--muted)">No parameters</div>':`<div class="g2">${params.map(p=>`<div class="cd"><div style="font-weight:600">${p.disp}</div><div style="font-size:10px;font-family:monospace;color:var(--muted)">${p.nm}</div><div style="font-size:11px;margin-top:6px">Current: <b>${p.cur}</b> · Default: ${p.def}</div></div>`).join('')}</div>`}`}
+
+function newWS(wbId){const id='WS_'+Date.now();if(!WSheets[wbId])WSheets[wbId]=[];WSheets[wbId].push({id,nm:'Sheet '+(WSheets[wbId].length+1),ord:WSheets[wbId].length,ct:'bar',cube:'Orders',shelves:{cols:[],rows:[],color:null,size:null,label:null,detail:[],tooltip:[]}});S.activeWS=id;toast('Worksheet created');R()}
+
+// ═══ MODALS ═══
+function rModal(){if(!S.modal)return'';
+if(S.modal.t==='alert'){const d=S.alertDraft;return`<div class="mo" onclick="if(event.target===this){S.modal=null;S.alertDraft=null;R()}"><div class="ml"><div class="mlt">${S.modal.id?'Edit':'Create'} Alert</div>
+<div class="fr"><label class="fl">Alert Name</label><input class="ip" value="${d.nm}" oninput="S.alertDraft.nm=this.value"></div>
+<div class="fr"><label class="fl">Condition</label><div class="cond-row">
+<select class="ip" onchange="S.alertDraft.measure=this.value"><option value="total_revenue" ${d.measure==='total_revenue'?'selected':''}>Orders.total_revenue</option><option value="order_count" ${d.measure==='order_count'?'selected':''}>Orders.order_count</option><option value="churn_rate" ${d.measure==='churn_rate'?'selected':''}>CustomerChurn.churn_rate</option></select>
+<select class="ip" onchange="S.alertDraft.operator=this.value">${[['gt','>'],['gte','≥'],['lt','<'],['lte','≤'],['eq','='],['crossed_above','crossed above'],['crossed_below','crossed below'],['pct_change_gt','% change >'],['pct_change_lt','% change <'],['in_range','in range'],['out_of_range','out of range']].map(([k,l])=>`<option value="${k}" ${d.operator===k?'selected':''}>${l}</option>`).join('')}</select>
+<input class="ip" value="${d.threshold}" placeholder="threshold" oninput="S.alertDraft.threshold=this.value">
+</div></div>
+<div class="fr"><label class="fl">Check Frequency (cron)</label><input class="ip" value="${d.freq}" oninput="S.alertDraft.freq=this.value"><div class="flh">e.g. <code>0 */4 * * *</code> (every 4h) · <code>0 9 * * *</code> (daily 9am)</div></div>
+<div class="fr"><label class="fl">Channels</label>
+<label style="display:inline-flex;gap:4px;align-items:center;margin-right:10px;font-size:12px"><input type="checkbox" ${d.channels.includes('email')?'checked':''} onchange="toggleCh('channels','email')"> Email</label>
+<label style="display:inline-flex;gap:4px;align-items:center;margin-right:10px;font-size:12px"><input type="checkbox" ${d.channels.includes('webhook')?'checked':''} onchange="toggleCh('channels','webhook')"> Webhook</label>
+<label style="display:inline-flex;gap:4px;align-items:center;margin-right:10px;font-size:12px"><input type="checkbox" ${d.channels.includes('slack')?'checked':''} onchange="toggleCh('channels','slack')"> Slack</label>
+<label style="display:inline-flex;gap:4px;align-items:center;font-size:12px"><input type="checkbox" ${d.channels.includes('teams')?'checked':''} onchange="toggleCh('channels','teams')"> Teams</label>
+</div>
+<div class="fr"><label class="fl">Recipients</label><input class="ip" value="${d.recipients}" oninput="S.alertDraft.recipients=this.value" placeholder="email@acme.com, https://hook.slack.com/..."></div>
+<div class="fr"><label class="fl">Cooldown (minutes)</label><input class="ip" type="number" value="${d.cooldown}" oninput="S.alertDraft.cooldown=this.value"><div class="flh">Prevents alert fatigue — alert won't re-fire within this window</div></div>
+<div style="display:flex;gap:6px;justify-content:flex-end;margin-top:14px"><button class="btn bg bs" onclick="S.modal=null;S.alertDraft=null;R()">Cancel</button><button class="btn be bs" onclick="saveAlert()">💾 Save Alert</button></div>
+</div></div>`}
+if(S.modal.t==='sub'){const d=S.subDraft;return`<div class="mo" onclick="if(event.target===this){S.modal=null;S.subDraft=null;R()}"><div class="ml"><div class="mlt">${S.modal.id?'Edit':'Create'} Subscription</div>
+<div class="fr"><label class="fl">Subscription Name</label><input class="ip" value="${d.nm}" oninput="S.subDraft.nm=this.value"></div>
+<div class="g2">
+<div class="fr"><label class="fl">Target Type</label><select class="ip" onchange="S.subDraft.type=this.value"><option value="dashboard" ${d.type==='dashboard'?'selected':''}>Dashboard</option><option value="widget" ${d.type==='widget'?'selected':''}>Widget</option><option value="story" ${d.type==='story'?'selected':''}>Story</option></select></div>
+<div class="fr"><label class="fl">Format</label><select class="ip" onchange="S.subDraft.format=this.value">${['png','pdf','csv','xlsx','html'].map(f=>`<option value="${f}" ${d.format===f?'selected':''}>${f.toUpperCase()}</option>`).join('')}</select></div>
+</div>
+<div class="fr"><label class="fl">Cron Schedule</label><input class="ip" value="${d.cron}" oninput="S.subDraft.cron=this.value"><div class="flh"><code>0 9 * * MON</code> (Monday 9am) · <code>0 17 * * *</code> (daily 5pm) · <code>0 8 1 1,4,7,10 *</code> (quarterly)</div></div>
+<div class="fr"><label class="fl">Delivery Channels</label>
+${['email','webhook','slack','teams'].map(c=>`<label style="display:inline-flex;gap:4px;align-items:center;margin-right:10px;font-size:12px"><input type="checkbox" ${d.channels.includes(c)?'checked':''} onchange="toggleChSub('${c}')"> ${c}</label>`).join('')}
+</div>
+<div class="fr"><label class="fl">Recipients (comma-separated)</label><input class="ip" value="${d.recipients}" oninput="S.subDraft.recipients=this.value" placeholder="you@acme.com, team@acme.com, https://hooks.slack.com/..."></div>
+<div class="fr"><label class="fl">Email Subject (optional)</label><input class="ip" value="${d.emailSubject||''}" oninput="S.subDraft.emailSubject=this.value" placeholder="Q4 Revenue Update"></div>
+<div style="display:flex;gap:6px;justify-content:flex-end;margin-top:14px"><button class="btn bg bs" onclick="S.modal=null;S.subDraft=null;R()">Cancel</button><button class="btn be bs" onclick="saveSub()">💾 Save Subscription</button></div>
+</div></div>`}
+if(S.modal.t==='profile'){return`<div class="mo" onclick="if(event.target===this){S.modal=null;R()}"><div class="ml ml-lg"><div class="mlt">📊 Column Profile: total_amount</div>
+<div class="kr" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px"><div class="kp"><div class="kl">Rows</div><div class="kv" style="font-size:18px">12,847</div></div><div class="kp"><div class="kl">Unique</div><div class="kv" style="font-size:18px">9,432</div></div><div class="kp"><div class="kl">Nulls</div><div class="kv" style="font-size:18px">127</div><div class="kd">1.0%</div></div><div class="kp"><div class="kl">Mean</div><div class="kv" style="font-size:18px">$333</div></div><div class="kp"><div class="kl">Std Dev</div><div class="kv" style="font-size:18px">$142</div></div></div>
+<div class="cb"><div class="ct">Distribution · 20 buckets</div><div class="hist-bars">${svgHist([{lower:0,upper:50,count:120},{lower:50,upper:100,count:380},{lower:100,upper:150,count:720},{lower:150,upper:200,count:1240},{lower:200,upper:250,count:1890},{lower:250,upper:300,count:2340},{lower:300,upper:350,count:2180},{lower:350,upper:400,count:1420},{lower:400,upper:450,count:890},{lower:450,upper:500,count:540},{lower:500,upper:550,count:320},{lower:550,upper:600,count:180},{lower:600,upper:650,count:95},{lower:650,upper:700,count:52},{lower:700,upper:750,count:28},{lower:750,upper:800,count:15},{lower:800,upper:850,count:8},{lower:850,upper:900,count:4},{lower:900,upper:950,count:2},{lower:950,upper:1000,count:1}])}</div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;font-family:monospace"><span>$0</span><span>$500</span><span>$1,000</span></div></div>
+<div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" onclick="S.modal=null;R()">Close</button></div>
+</div></div>`}
+if(S.modal.t==='sched'){return`<div class="mo" onclick="if(event.target===this){S.modal=null;R()}"><div class="ml ml-sm"><div class="mlt">Schedule Flow Run</div>
+<div class="fr"><label class="fl">Cron Expression</label><input class="ip" value="0 2 * * *" placeholder="0 2 * * *"><div class="flh">Daily at 2am</div></div>
+<div class="fr"><label class="fl">On Failure Notify</label><select class="ip"><option>None</option><option>Email owner</option><option>Webhook</option><option>Both</option></select></div>
+<div class="fr"><label class="fl">Max Runtime (minutes)</label><input class="ip" type="number" value="60"></div>
+<div class="fr"><label class="fl">Incremental Column (optional)</label><input class="ip" placeholder="updated_at"><div class="flh">Auto-filters upstream with <code>WHERE col > watermark</code></div></div>
+<div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn bg bs" onclick="S.modal=null;R()">Cancel</button><button class="btn be bs" onclick="S.modal=null;toast('Flow scheduled');R()">Save</button></div>
+</div></div>`}
+return''}
+function toggleCh(field,val){const arr=S.alertDraft.channels;const i=arr.indexOf(val);if(i>=0)arr.splice(i,1);else arr.push(val);R()}
+function toggleChSub(val){const arr=S.subDraft.channels;const i=arr.indexOf(val);if(i>=0)arr.splice(i,1);else arr.push(val);R()}
+
+// ═══ OTHER PAGES (reuse from v6) ═══
+function rDS(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Sources</div><div class="pd">${DS.length} connections · 27 connector types</div></div>${hp('datasource.create')?'<button class="btn" onclick="toast(\'Create datasource\')">+ Add</button>':''}</div><div class="g3">${DS.map(d=>`<div class="cd"><div style="display:flex;gap:10px;margin-bottom:8px">${dti(d.tp)}<div style="flex:1"><div style="font-weight:600;font-size:13px">${d.nm}</div><div style="font-size:11px;color:var(--muted)">${d.tp}</div></div>${sb(d.st)}</div><div style="font-size:11px;color:var(--muted)">${d.st==='ERROR'?d.er:`${d.ms}ms · ${d.tb} tables`}</div></div>`).join('')}</div></div>`}
+function rExp(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Explorer</div><div class="pd">Visual discovery · Graphic Walker · Drill-down enabled</div></div></div><div style="display:grid;grid-template-columns:200px 1fr;gap:14px"><div class="fs-pane"><div class="fs-cat">Dimensions</div>${['📅 order_date','🏷 region','🏷 product_category','🏷 customer_id'].map(d=>`<div class="fs-it">${d}</div>`).join('')}<div class="fs-cat">Measures</div>${['Σ total_revenue','# order_count','x̄ avg_order_value'].map(m=>`<div class="fs-it measure">${m}</div>`).join('')}</div><div class="cb"><div class="wt">Revenue by Region · With Trend Line</div>${svgBar(['Jan','Feb','Mar','Apr','May','Jun'],[320,380,350,420,480,510],'#1e40af',560,280)}<div style="margin-top:10px;padding:8px;background:var(--emerald-lt);border-left:3px solid var(--emerald);font-size:11px;border-radius:0 4px 4px 0"><b>📈 Trend line:</b> y = 38.57x + 288 · R² = 0.93 · Strong linear growth</div></div></div></div>`}
+function rSem(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Semantic Layer</div><div class="pd">Cube.js schemas</div></div></div><div class="cbl"><span style="color:#82aaff">cube</span>(<span style="color:#c3e88d">\`Orders\`</span>, {
+  sql: <span style="color:#c3e88d">\`SELECT * FROM public.orders\`</span>,
+  <span style="color:#c792ea">measures</span>: {
+    total_revenue: { sql: <span style="color:#c3e88d">\`\${CUBE}.total_amount\`</span>, type: <span style="color:#c3e88d">\`sum\`</span> },
+    avg_order_value: { sql: <span style="color:#c3e88d">\`\${CUBE}.total_amount\`</span>, type: <span style="color:#c3e88d">\`avg\`</span> },
+  },
+  <span style="color:#c792ea">dimensions</span>: {
+    region: { sql: <span style="color:#c3e88d">\`\${CUBE}.region\`</span>, type: <span style="color:#c3e88d">\`string\`</span> },
+    order_date: { sql: <span style="color:#c3e88d">\`\${CUBE}.order_date\`</span>, type: <span style="color:#c3e88d">\`time\`</span> }
+  }
+});</div></div>`}
+function rLin(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Lineage</div></div></div><div class="lc-c"><div class="ln ln-d" style="top:30px;left:15px">📀 warehouse</div><div class="ln ln-d" style="top:120px;left:15px">📀 snowflake</div><div class="ln ln-c" style="top:30px;left:230px">◆ Orders</div><div class="ln ln-c" style="top:120px;left:230px">◆ Customers</div><div class="ln ln-a" style="top:30px;left:420px">📊 Q4 Revenue</div><div class="ln ln-a" style="top:120px;left:420px">📊 APAC Sales</div></div></div>`}
+function rChk(){const pn=DA.filter(d=>d.st==='PENDING_REVIEW');return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Review Queue</div><div class="pd">${pn.length} pending</div></div></div>${pn.length===0?'<div style="padding:48px;text-align:center;color:var(--muted)">✓ All caught up</div>':pn.map(d=>`<div class="cd" style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">${d.nm}<div style="display:flex;gap:6px"><button class="btn be bs">✓ Approve</button><button class="btn bw bs">✕ Reject</button></div></div>`).join('')}</div>`}
+function rStories(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Stories</div><div class="pd">Multi-frame narratives</div></div></div><div class="g3"><div class="cd"><div style="font-weight:600">Q4 Performance Story</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Walkthrough of Q4 results</div><div style="margin-top:10px;font-size:11px;color:var(--muted)">2 points · v1</div></div></div></div>`}
+function rAU(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Users</div></div></div><table class="dt"><thead><tr><th>Username</th><th>Name</th><th>Role</th></tr></thead><tbody>${U.map(u=>`<tr><td><b>${u.u}</b></td><td>${u.n}</td><td><span class="bdg bdg-in">${u.r}</span></td></tr>`).join('')}</tbody></table></div>`}
+function rAA(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Audit Log</div></div></div><table class="dt"><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Status</th></tr></thead><tbody>${AL.map(a=>`<tr><td style="font-family:monospace;font-size:11px">${a.tm}</td><td>${a.us}</td><td><span class="bdg bdg-ol" style="font-family:monospace">${a.ac}</span></td><td style="font-family:monospace;font-size:11px">${a.rs}</td><td><span class="bdg bdg-ok">${a.s}</span></td></tr>`).join('')}</tbody></table></div>`}
+function aNL(){const i=document.getElementById('nli');if(!i||!i.value.trim())return;const ch=document.getElementById('nlc');if(ch){ch.innerHTML=`<div style="display:flex;gap:4px"><span style="font-size:11px;color:var(--muted)">🔍 Applied:</span>${i.value.split(' ').slice(0,4).map(t=>`<span class="nc">${t}</span>`).join('')}</div>`}toast('Filter applied')}
+
+// ═══ ROUTER ═══
+function R(){const a=document.getElementById('app');let h='';const p=S.page;
+if(!S.user||p==='login')h=rLogin();
+else if(p==='home')h=`<div class="shell">${rHome()}</div>`;
+else if(p==='datasources')h=`<div class="shell">${rDS()}</div>`;
+else if(p==='flows')h=`<div class="shell">${rFlows()}</div>`;
+else if(p.startsWith('flow-'))h=`<div class="shell">${rFlow(p.slice(5))}</div>`;
+else if(p==='alerts')h=`<div class="shell">${rAlerts()}</div>`;
+else if(p==='subscriptions')h=`<div class="shell">${rSubs()}</div>`;
+else if(p==='admin-shapes')h=`<div class="shell">${rShapesAdmin()}</div>`;
+else if(p==='workbooks')h=`<div class="shell">${rWorkbooks()}</div>`;
+else if(p.startsWith('wb-'))h=`<div class="shell">${rWBE(p.slice(3))}</div>`;
+else if(p==='stories')h=`<div class="shell">${rStories()}</div>`;
+else if(p==='dashboards')h=`<div class="shell">${rDash()}</div>`;
+else if(p.startsWith('dv-'))h=`<div class="shell">${rDV(p.slice(3))}</div>`;
+else if(p==='checker')h=`<div class="shell">${rChk()}</div>`;
+else if(p==='lineage')h=`<div class="shell">${rLin()}</div>`;
+else if(p==='explorer')h=`<div class="shell">${rExp()}</div>`;
+else if(p==='semantic')h=`<div class="shell">${rSem()}</div>`;
+else if(p==='admin-users')h=`<div class="shell">${rAU()}</div>`;
+else if(p==='admin-audit')h=`<div class="shell">${rAA()}</div>`;
+else if(p==='admin-webhooks')h=`<div class="shell">${sbar()}<div class="mn"><div class="pt">Webhooks</div><div class="g3" style="margin-top:16px"><div class="cd"><b>slack-notify</b> <span class="bdg bdg-ok">Active</span><div style="font-family:monospace;font-size:10px;color:var(--muted);margin:4px 0">hooks.slack.com</div><div style="font-size:11px;color:var(--emerald)">APPROVAL · 247 sent</div></div><div class="cd"><b>pagerduty</b> <span class="bdg bdg-ok">Active</span><div style="font-family:monospace;font-size:10px;color:var(--muted);margin:4px 0">events.pagerduty.com</div><div style="font-size:11px;color:var(--emerald)">ALERT · 14 sent</div></div></div></div></div>`;
+else if(p==='admin-preagg')h=`<div class="shell">${sbar()}<div class="mn"><div class="pt">Pre-Aggregations</div><div class="cd" style="margin-top:16px;border-left:3px solid var(--amber)"><b>Orders cube</b> <span class="bdg bdg-ol">87% confidence</span><br>1,247 queries · 892ms avg<br><button class="btn bs" style="margin-top:8px" onclick="toast('Applied!')">Apply →</button></div></div></div>`;
+else h=`<div class="shell">${sbar()}<div class="mn"><div class="pt">Page: ${p}</div></div></div>`;
+h+=rModal();
+if(S.toast)h+=`<div class="ts">${S.toast}</div>`;
+a.innerHTML=h;
+}
+R();
+</script>
+</body>
+</html>
