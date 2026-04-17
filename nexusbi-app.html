@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexusBI v6</title>
+<style>
+:root{--bg:#fafaf7;--paper:#fff;--sunk:#f5f2ea;--ink:#0a0a0a;--ink2:#1f1f1f;--muted:#6b7280;--muted2:#9ca3af;--line:#e7e3d9;--line2:#d4cebf;--accent:#1e40af;--accent-lt:#dbeafe;--warm:#c2410c;--warm-lt:#ffedd5;--emerald:#047857;--emerald-lt:#d1fae5;--amber:#b45309;--amber-lt:#fef3c7;--violet:#6d28d9;--violet-lt:#ede9fe;--rose:#be185d;--sb-w:220px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:14px}
+a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inherit;font-size:13px}
+.lp{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#fafaf7,#f0ede4)}
+.lc{width:380px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.lb{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.bx{width:28px;height:28px;background:var(--ink);position:relative;display:inline-block;flex-shrink:0}.bx::after{content:'';position:absolute;inset:4px;background:var(--warm)}
+.bx-s{width:18px;height:18px}.bx-s::after{inset:3px}
+.lt{font-size:26px;font-weight:700;margin-bottom:4px}.ls{font-size:13px;color:var(--muted);margin-bottom:20px}
+.shell{display:grid;grid-template-columns:var(--sb-w) 1fr;min-height:100vh}
+.sb{background:#fbfaf6;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.sb-br{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.sb-sec{padding:10px 10px}
+.sb-cat{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted2);padding:6px 8px 4px;font-weight:600}
+.sb-i{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:5px;font-size:13px;color:var(--ink2);cursor:pointer;transition:background .12s}
+.sb-i:hover{background:var(--accent-lt)}.sb-i.ac{background:var(--accent-lt);color:var(--accent);font-weight:600}
+.sb-i .d{width:5px;height:5px;border-radius:50%;background:var(--muted2);flex-shrink:0}.sb-i.ac .d{background:var(--accent)}
+.sb-ft{margin-top:auto;padding:12px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.sb-ft button{background:none;border:none;color:var(--warm);font-size:11px;font-weight:600;cursor:pointer}
+.mn{padding:28px 36px;overflow-y:auto;max-height:100vh}
+.tb{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.pt{font-size:24px;font-weight:700;letter-spacing:-.02em}.pd{font-size:13px;color:var(--muted);margin-top:4px}.bc{font-size:11px;color:var(--muted);margin-bottom:6px;font-family:monospace}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:12px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:4px}
+.btn:hover{opacity:.9}.bg{background:#fff;color:var(--ink)}.bw{background:var(--warm);border-color:var(--warm)}.be{background:var(--emerald);border-color:var(--emerald)}.bv{background:var(--violet);border-color:var(--violet)}.bs{padding:4px 10px;font-size:11px}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:10px;font-weight:600;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.bdg-ok{background:#dcfce7;color:#166534}.bdg-er{background:#fee2e2;color:#991b1b}.bdg-wn{background:var(--amber-lt);color:#92400e}.bdg-in{background:var(--accent-lt);color:var(--accent)}.bdg-vi{background:var(--violet-lt);color:var(--violet)}.bdg-ol{border:1px solid var(--line2);color:var(--muted);background:#fff}
+.cd{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;transition:box-shadow .15s}.cd:hover{box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kp{border:1px solid var(--line);padding:14px 16px;background:#fff;border-radius:4px}
+.kl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600}
+.kv{font-size:28px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.kd{font-size:11px;margin-top:4px;font-family:monospace}.kd.up{color:var(--emerald)}.kd.dn{color:var(--warm)}
+.fr{margin-bottom:14px}.fl{font-size:11px;font-weight:600;margin-bottom:5px;display:block}
+.ip{width:100%;padding:8px 10px;border:1px solid var(--line2);background:#fff;font-size:13px;border-radius:4px;outline:none}.ip:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(30,64,175,.1)}
+table.dt{width:100%;border-collapse:collapse;font-size:13px}table.dt thead tr{border-bottom:2px solid var(--ink)}table.dt th{text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}table.dt td{padding:10px 10px;border-bottom:1px solid var(--line)}table.dt tbody tr{cursor:pointer;transition:background .1s}table.dt tbody tr:hover{background:var(--sunk)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cb{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px}.ct{font-size:13px;font-weight:600;margin-bottom:10px}
+.cbl{background:#1a1a1a;color:#e5e5e5;font-family:'Courier New',monospace;font-size:12px;padding:16px;border-radius:6px;overflow-x:auto;line-height:1.6;white-space:pre}
+.tl{display:flex;align-items:center;gap:0;padding:12px 0}.tl-n{padding:8px 14px;border:1.5px solid var(--line);border-radius:4px;background:#fff;text-align:center;cursor:pointer;transition:all .15s}.tl-n:hover{border-color:var(--accent)}.tl-n.ac{border-color:var(--ink);background:var(--ink);color:#fff}.tl-n .v{font-weight:700;font-size:13px}.tl-n .da{font-size:10px;opacity:.7}.tl-l{flex:1;height:1.5px;background:var(--line2);min-width:16px;max-width:40px}
+.pb-r{display:flex;align-items:center;gap:10px;margin-bottom:8px}.pb-l{min-width:130px;font-size:12px}.pb-t{flex:1;height:18px;background:#f3f4f6;border-radius:2px;overflow:hidden}.pb-f{height:100%;border-radius:2px;transition:width .4s}.pb-v{min-width:50px;font-size:11px;text-align:right;font-family:monospace}
+.nl{display:flex;gap:8px;padding:10px 14px;border:1.5px solid var(--violet);border-radius:6px;background:linear-gradient(to right,#faf5ff,#fff);align-items:center;margin-bottom:16px}.nl input{flex:1;border:none;background:transparent;outline:none;font-size:13px}
+.nc{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#f3f4f6;border-radius:99px;font-size:11px;font-weight:500;margin:2px}
+.lc-c{background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/24px 24px,#fff;min-height:340px;position:relative;border:1px solid var(--line);border-radius:6px;padding:24px}
+.ln{position:absolute;padding:8px 14px;border:1.5px solid;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer}
+.ln-d{border-color:var(--accent);background:var(--accent-lt);color:var(--accent)}.ln-c{border-color:var(--violet);background:var(--violet-lt);color:var(--violet)}.ln-a{border-color:var(--emerald);background:var(--emerald-lt);color:var(--emerald)}.ln-w{border-color:var(--amber);background:var(--amber-lt);color:var(--amber);font-size:10px;padding:5px 10px}
+.dg{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;min-height:400px}
+.wg{background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px}.wt{font-size:12px;font-weight:600;margin-bottom:8px}
+.wp{width:180px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px;height:fit-content}.wpt{font-size:12px;font-weight:700;margin-bottom:10px}.wpb{display:block;width:100%;text-align:left;padding:8px 10px;margin-bottom:4px;font-size:12px;border:1px solid var(--line);border-radius:4px;background:#fff;cursor:pointer}.wpb:hover{background:var(--sunk)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1000}
+.ml{background:#fff;border-radius:8px;padding:28px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.15)}.mlt{font-size:18px;font-weight:700;margin-bottom:16px}
+.ts{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:2000;animation:su .3s ease}
+@keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+svg.ch{display:block;width:100%}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;margin-bottom:-1px}
+.tab.ac{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.shelf{border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:#fff;min-height:54px}
+.shelf-l{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#dbeafe;color:#1e40af;border-radius:99px;font-size:11px;font-weight:500;margin:2px;font-family:monospace}
+.fs-pane{width:200px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:10px}
+.fs-cat{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--warm);font-weight:700;margin:8px 0 6px}
+.fs-it{font-size:12px;padding:5px 8px;cursor:grab;border-radius:3px;margin-bottom:2px;font-family:monospace}
+.fs-it:hover{background:var(--accent-lt)}
+.fs-it.measure:hover{background:var(--amber-lt)}
+@media(max-width:768px){.shell{grid-template-columns:1fr}.sb{display:none}.kr,.g3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ══ STATE ══
+const U=[
+{id:'USR_ADMIN',u:'admin',p:'Admin@123!',n:'Platform Administrator',e:'admin@nexusbi.local',r:'PLATFORM_ADMIN',rs:['PLATFORM_ADMIN']},
+{id:'USR_A1',u:'author1',p:'Test@123!',n:'Sarah Chen',e:'sarah.chen@acme.local',r:'AUTHOR',rs:['AUTHOR']},
+{id:'USR_C1',u:'checker1',p:'Test@123!',n:'Michael Kim',e:'michael.kim@acme.local',r:'CHECKER',rs:['CHECKER']},
+{id:'USR_C2',u:'checker2',p:'Test@123!',n:'Emma Wilson',e:'emma.wilson@acme.local',r:'CHECKER',rs:['CHECKER']},
+{id:'USR_V1',u:'viewer1',p:'Test@123!',n:'David Lee',e:'david.lee@acme.local',r:'VIEWER',rs:['VIEWER']},
+{id:'USR_E',u:'embed_user',p:'Test@123!',n:'Embed Service',e:'embed@nexusbi.local',r:'EMBED_ONLY',rs:['EMBED_ONLY']}
+];
+
+const RP={
+PLATFORM_ADMIN:'datasource.view,datasource.create,datasource.edit,datasource.delete,schema.view,schema.edit,schema.create,explorer.use,dashboard.view,dashboard.create,dashboard.edit,dashboard.submit,dashboard.approve,dashboard.reject,dashboard.share,dashboard.embed,dashboard.export,dashboard.replay,lineage.view,report.schedule,tableau.import,perf.view,preagg.manage,webhook.manage,template.view,template.install,template.publish,workbook.view,workbook.create,workbook.edit,workbook.delete,workbook.publish,story.view,story.create,story.edit,admin.roles,admin.users,admin.platform,audit.view,file.upload,api_source.manage'.split(','),
+DS_ADMIN:'datasource.view,datasource.create,schema.view,schema.edit,explorer.use,lineage.view,file.upload,api_source.manage,perf.view,preagg.manage,tableau.import'.split(','),
+AUTHOR:'datasource.view,schema.view,explorer.use,lineage.view,dashboard.view,dashboard.create,dashboard.edit,dashboard.submit,dashboard.share,dashboard.embed,dashboard.export,dashboard.replay,report.schedule,template.view,template.install,template.publish,workbook.view,workbook.create,workbook.edit,workbook.delete,workbook.publish,story.view,story.create,story.edit,perf.view,file.upload'.split(','),
+CHECKER:'dashboard.view,dashboard.approve,dashboard.reject,dashboard.replay,lineage.view,perf.view'.split(','),
+VIEWER:'dashboard.view,template.view,explorer.use,lineage.view,story.view'.split(','),
+EMBED_ONLY:['dashboard.view']};
+
+const DS=[
+{id:'DS_PG',nm:'production-warehouse',tp:'postgres',st:'ACTIVE',lt:'10:12',tb:247,ms:89},
+{id:'DS_SF',nm:'snowflake-finance',tp:'snowflake',st:'ACTIVE',lt:'09:48',tb:89,ms:142},
+{id:'DS_BQ',nm:'bq-analytics',tp:'bigquery',st:'ACTIVE',lt:'09:00',tb:34,ms:203},
+{id:'DS_OR',nm:'oracle-legacy',tp:'oracle',st:'ERROR',lt:'08:30',tb:0,ms:0,er:'ORA-12514'},
+{id:'DS_DB',nm:'databricks-ml',tp:'databricks',st:'ACTIVE',lt:'09:38',tb:17,ms:178},
+{id:'DS_CH',nm:'clickhouse-events',tp:'clickhouse',st:'TESTING',lt:null,tb:12,ms:0}
+];
+
+// Dashboard shares: only DASH_REVENUE is shared with viewer1 (matches seed SQL)
+const SHARES={DASH_REVENUE:['USR_V1','R_VIEWER']};
+
+const DA=[
+{id:'DASH_REVENUE',nm:'Q4 Revenue Overview',ds:'Quarterly revenue performance across all regions',st:'APPROVED',on:'Sarah Chen',ownerId:'USR_A1',v:3,dc:false,tg:'revenue,quarterly',w:[
+  {t:'kpi',ti:'Total Revenue',vl:'$4.28M',su:'↑ 14.2% vs Q3',c:3},
+  {t:'kpi',ti:'Orders',vl:'12,847',su:'↑ 8.1%',c:3},
+  {t:'kpi',ti:'AOV',vl:'$333',su:'↓ 2.1%',c:3},
+  {t:'kpi',ti:'Active Users',vl:'8,421',su:'↑ 22.7%',c:3},
+  {t:'bar',ti:'Revenue by Region',c:8,cats:['APAC','EMEA','Americas','ANZ','LATAM','MEA'],vals:[1420,980,1560,320,280,190],cl:'#1e40af'},
+  {t:'tbl',ti:'Top Products',c:4,cols:['Product','Revenue','Growth'],rows:[['Enterprise','$1.2M','+18%'],['Pro','$847K','+12%'],['Team','$562K','+5%'],['Starter','$231K','-3%']]}]},
+{id:'DASH_CHURN',nm:'Customer Churn Analysis',ds:'Monthly churn rates and retention curves',st:'DRAFT',on:'Sarah Chen',ownerId:'USR_A1',v:1,dc:false,tg:'churn,retention',w:[
+  {t:'kpi',ti:'Monthly Churn',vl:'2.4%',su:'↓ 0.3pp',c:4},
+  {t:'kpi',ti:'At-Risk Accounts',vl:'47',su:'Need attention',c:4},
+  {t:'kpi',ti:'NPS Score',vl:'72',su:'↑ 3 pts',c:4},
+  {t:'line',ti:'Churn Trend (6 months)',c:12,cats:['Jan','Feb','Mar','Apr','May','Jun'],vals:[3.2,2.9,2.7,2.8,2.5,2.4],cl:'#c2410c'}]},
+{id:'DASH_APAC',nm:'APAC Sales Performance',ds:'Regional sales metrics for Asia-Pacific',st:'PENDING_REVIEW',on:'Sarah Chen',ownerId:'USR_A1',v:2,dc:true,tg:'apac,sales',w:[
+  {t:'kpi',ti:'APAC Revenue',vl:'$1.42M',su:'↑ 22.7%',c:4},
+  {t:'kpi',ti:'New Customers',vl:'284',su:'↑ 18%',c:4},
+  {t:'kpi',ti:'Win Rate',vl:'34%',su:'↑ 2pp',c:4},
+  {t:'bar',ti:'Revenue by Country',c:12,cats:['Japan','Australia','India','Singapore','Korea','Indonesia'],vals:[480,320,280,190,150,82],cl:'#047857'}]}
+];
+
+// Workbooks (Tableau replacement)
+const WB=[
+{id:'WB_REVENUE',nm:'Revenue Analysis Workbook',ds:'Personal workspace for exploring quarterly revenue across regions and products.',ownerId:'USR_A1',ownerNm:'Sarah Chen',pub:false,publishedDashId:null,v:1,tg:'revenue,exploratory'}
+];
+
+const WSheets={WB_REVENUE:[
+{id:'WS_REGION',nm:'Revenue by Region',ord:0,ct:'bar',cube:'Orders',shelves:{cols:['region'],rows:['total_revenue'],color:'region',size:null,label:null,detail:[],tooltip:[]}},
+{id:'WS_TREND',nm:'Revenue Trend',ord:1,ct:'line',cube:'Orders',shelves:{cols:['order_date.month'],rows:['total_revenue'],color:null,size:null,label:null,detail:[],tooltip:[]}}
+]};
+
+const CalcFields={WB_REVENUE:[
+{id:'CF1',nm:'profit_margin',expr:'(total_revenue - total_cost) / NULLIF(total_revenue, 0)',ft:'measure',dt:'number',desc:'Profit margin as percentage',valid:true},
+{id:'CF2',nm:'revenue_bucket',expr:"CASE WHEN total_revenue > 1000000 THEN 'High' WHEN total_revenue > 100000 THEN 'Mid' ELSE 'Low' END",ft:'dimension',dt:'string',desc:'Bucket revenue into tiers',valid:true}
+]};
+
+const Params={WB_REVENUE:[
+{id:'P1',nm:'target_region',disp:'Target Region',dt:'string',cur:'APAC',def:'APAC',at:'list',av:['APAC','EMEA','Americas','ANZ','LATAM']},
+{id:'P2',nm:'min_revenue',disp:'Minimum Revenue',dt:'integer',cur:'100000',def:'100000',at:'range',rmin:'0',rmax:'10000000',rstep:'50000'}
+]};
+
+// Stories
+const ST=[
+{id:'STORY_Q4',nm:'Q4 Performance Story',ds:'Walkthrough of Q4 results across regions, products, and trends.',ownerId:'USR_A1',pub:true,v:1,points:[
+  {id:'SP1',ord:0,pt:'dashboard',ti:'Q4 Revenue Overview',narr:'We exceeded Q3 revenue by 14.2%, driven primarily by APAC and Americas.',dashId:'DASH_REVENUE'},
+  {id:'SP2',ord:1,pt:'text',ti:'Key Takeaways',narr:'Three things stood out: (1) APAC growth of 22.7%, (2) AOV decline of 2.1% needs attention, (3) Enterprise Plan continues to be our top revenue driver at $1.2M.'}
+]}
+];
+
+const AL=[
+{tm:'10:14:22',us:'Sarah Chen',ac:'workbook.publish',rs:'WB_REVENUE',s:201,ms:284},
+{tm:'10:12:01',us:'Admin',ac:'datasource.test',rs:'DS_PG',s:200,ms:89},
+{tm:'09:48:33',us:'Sarah Chen',ac:'dashboard.submit',rs:'DASH_APAC',s:201,ms:112},
+{tm:'09:30:00',us:'Michael Kim',ac:'dashboard.approve',rs:'DASH_REVENUE',s:200,ms:78},
+{tm:'09:15:12',us:'Admin',ac:'user.create',rs:'USR_VIEWER1',s:201,ms:156},
+{tm:'08:22:00',us:'Sarah Chen',ac:'worksheet.create',rs:'WS_TREND',s:201,ms:94},
+{tm:'08:00:00',us:'Admin',ac:'datasource.create',rs:'DS_CH',s:201,ms:201},
+{tm:'07:30:00',us:'Emma Wilson',ac:'schema.create',rs:'orders_cube',s:201,ms:89}
+];
+
+let S={user:null,page:'login',modal:null,toast:null,wbTab:'sheets',activeWS:null,activeStoryPt:0};
+
+function hp(p){if(!S.user)return false;return S.user.rs.some(r=>(RP[r]||[]).includes(p))}
+function sb(s){const m={ACTIVE:'bdg-ok',APPROVED:'bdg-ok',ERROR:'bdg-er',REJECTED:'bdg-er',DRAFT:'bdg-ol',TESTING:'bdg-wn',PENDING_REVIEW:'bdg-wn',INACTIVE:'bdg-ol'};return`<span class="bdg ${m[s]||'bdg-ol'}">${s.replace('_',' ')}</span>`}
+function toast(m){S.toast=m;R();setTimeout(()=>{S.toast=null;R()},3000)}
+function dti(t){const c={postgres:'#336791',snowflake:'#29b5e8',bigquery:'#4285f4',oracle:'#f80000',databricks:'#ff3621',clickhouse:'#ffcc01'};return`<div style="width:32px;height:32px;background:${c[t]||'#6b7280'};border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;flex-shrink:0">${t.substring(0,2).toUpperCase()}</div>`}
+function nav(p){S.page=p;S.modal=null;location.hash=p;R();window.scrollTo(0,0)}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1)||'login';if(h!==S.page){S.page=h;R()}});
+
+// Visible dashboards based on role
+function visibleDashboards(){
+  if(!S.user)return[];
+  if(hp('dashboard.create'))return DA; // admin/author/checker see all
+  // viewer: only owned + explicitly shared + APPROVED
+  return DA.filter(d=>{
+    if(d.ownerId===S.user.id)return true;
+    const shared=(SHARES[d.id]||[]).some(sh=>sh===S.user.id||S.user.rs.includes(sh.replace('R_','')));
+    return shared&&d.st==='APPROVED';
+  });
+}
+
+// ── SVG Charts ──
+function svgBar(cats,vals,color,w,h){
+  const mx=Math.max(...vals)||1,pad=40,bw=Math.min(36,(w-pad-10)/cats.length*.7),gap=(w-pad-10)/cats.length;
+  let bars='',labels='';
+  cats.forEach((c,i)=>{
+    const bh=(vals[i]/mx)*(h-50);const x=pad+i*gap+gap/2-bw/2;const y=h-30-bh;
+    bars+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${color}" rx="2"><title>${c}: ${vals[i]}</title></rect>`;
+    labels+=`<text x="${pad+i*gap+gap/2}" y="${h-10}" text-anchor="middle" fill="#6b7280" font-size="10" font-family="system-ui">${c}</text>`;
+  });
+  const gridLines=[0,.25,.5,.75,1].map(p=>{const y=h-30-(h-50)*p;const v=Math.round(mx*p);return`<line x1="${pad}" y1="${y}" x2="${w}" y2="${y}" stroke="#e5e7eb" stroke-width="0.5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" fill="#9ca3af" font-size="9" font-family="system-ui">${v>=1000?(v/1000).toFixed(0)+'K':v}</text>`}).join('');
+  return`<svg class="ch" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${gridLines}${bars}${labels}</svg>`;
+}
+function svgLine(cats,vals,color,w,h){
+  const mx=Math.max(...vals)||1,mn=Math.min(...vals),pad=45,ch=h-55;
+  const pts=cats.map((c,i)=>{const x=pad+i*((w-pad-10)/(cats.length-1||1));const y=15+ch-(((vals[i]-mn)/(mx-mn||1))*ch);return{x,y,c,v:vals[i]}});
+  const polyline=pts.map(p=>`${p.x},${p.y}`).join(' ');
+  const area=`${pts[0].x},${h-30} ${polyline} ${pts[pts.length-1].x},${h-30}`;
+  let labels=pts.map(p=>`<text x="${p.x}" y="${h-10}" text-anchor="middle" fill="#6b7280" font-size="10" font-family="system-ui">${p.c}</text>`).join('');
+  let dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${color}" stroke="#fff" stroke-width="1.5"><title>${p.c}: ${p.v}</title></circle>`).join('');
+  const gridLines=[0,.25,.5,.75,1].map(p=>{const y=15+ch-ch*p;const v=(mn+(mx-mn)*p).toFixed(1);return`<line x1="${pad}" y1="${y}" x2="${w}" y2="${y}" stroke="#e5e7eb" stroke-width="0.5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" fill="#9ca3af" font-size="9" font-family="system-ui">${v}</text>`}).join('');
+  return`<svg class="ch" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${gridLines}<polygon points="${area}" fill="${color}" opacity="0.1"/><polyline points="${polyline}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+}
+function svgMulti(cats,series,w,h){
+  const all=series.flatMap(s=>s.v);const mx=Math.max(...all)||1,mn=Math.min(...all),pad=50,ch=h-55;
+  const colors=['#1e40af','#c2410c','#047857'];
+  let out='';
+  const gridLines=[0,.25,.5,.75,1].map(p=>{const y=15+ch-ch*p;const v=Math.round(mn+(mx-mn)*p);return`<line x1="${pad}" y1="${y}" x2="${w}" y2="${y}" stroke="#e5e7eb" stroke-width="0.5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" fill="#9ca3af" font-size="9" font-family="system-ui">${v>=1000?(v/1000).toFixed(0)+'K':v}</text>`}).join('');
+  out+=gridLines;
+  series.forEach((s,si)=>{
+    const cl=colors[si%3];
+    const pts=cats.map((c,i)=>{const x=pad+i*((w-pad-10)/(cats.length-1));const y=15+ch-(((s.v[i]-mn)/(mx-mn||1))*ch);return{x,y}});
+    out+=`<polyline points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="${cl}" stroke-width="2" stroke-linecap="round"/>`;
+    pts.forEach(p=>{out+=`<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="${cl}"/>`});
+  });
+  let labels=cats.map((c,i)=>`<text x="${pad+i*((w-pad-10)/(cats.length-1))}" y="${h-10}" text-anchor="middle" fill="#6b7280" font-size="9" font-family="system-ui">${c}</text>`).join('');
+  let legend=series.map((s,i)=>`<rect x="${pad+i*100}" y="2" width="12" height="3" rx="1" fill="${colors[i%3]}"/><text x="${pad+14+i*100}" y="7" fill="#6b7280" font-size="9" font-family="system-ui">${s.n}</text>`).join('');
+  return`<svg class="ch" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${legend}${out}${labels}</svg>`;
+}
+
+// ── RENDERERS ──
+function rLogin(){return`<div class="lp"><div class="lc"><div class="lb"><span class="bx"></span><span style="font-weight:700;font-size:20px">NexusBI</span></div><div class="lt">Welcome back</div><div class="ls">Sign in to continue to NexusBI v6</div><div class="fr"><label class="fl">Username</label><input class="ip" id="lu" value="admin"></div><div class="fr"><label class="fl">Password</label><input class="ip" id="lp" type="password" value="Admin@123!"></div><div id="le" style="color:var(--warm);font-size:12px;margin-bottom:10px;display:none"></div><button class="btn" style="width:100%;justify-content:center;margin-top:4px" onclick="doL()">Sign in →</button><div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);text-align:center"><b>Test accounts:</b> admin / author1 / checker1 / checker2 / viewer1 / embed_user<br>Passwords: Admin@123! (admin) · Test@123! (others)</div></div></div>`}
+
+function doL(){const u=document.getElementById('lu').value,p=document.getElementById('lp').value;const f=U.find(x=>x.u===u&&x.p===p);if(!f){const e=document.getElementById('le');e.textContent='Invalid username or password';e.style.display='block';return}S.user=f;nav('home')}
+
+function sbar(){const u=S.user,its=[
+{l:'Overview',p:'home'},
+{l:'Data Sources',p:'datasources',pm:'datasource.view'},
+{l:'API Sources',p:'api-sources',pm:'datasource.view'},
+{l:'Tableau Import',p:'tableau',pm:'tableau.import'},
+{l:'Workbooks',p:'workbooks',pm:'workbook.view'},
+{l:'Stories',p:'stories',pm:'story.view'},
+{l:'Explorer',p:'explorer',pm:'explorer.use'},
+{l:'Semantic Layer',p:'semantic',pm:'schema.view'},
+{l:'Dashboards',p:'dashboards',pm:'dashboard.view'},
+{l:'Review Queue',p:'checker',pm:'dashboard.approve'},
+{l:'Data Lineage',p:'lineage',pm:'lineage.view'},
+{l:'Templates',p:'templates',pm:'template.view'}
+],adm=[
+{l:'Roles & Permissions',p:'admin-roles',pm:'admin.roles'},
+{l:'Users',p:'admin-users',pm:'admin.users'},
+{l:'Platform Config',p:'admin-platform',pm:'admin.platform'},
+{l:'Audit Log',p:'admin-audit',pm:'audit.view'},
+{l:'Webhooks',p:'admin-webhooks',pm:'webhook.manage'},
+{l:'Pre-Aggregations',p:'admin-preagg',pm:'preagg.manage'},
+{l:'Timed Access',p:'admin-timed',pm:'admin.platform'}
+];
+const vi=its.filter(i=>!i.pm||hp(i.pm)),va=adm.filter(i=>!i.pm||hp(i.pm));
+return`<aside class="sb"><div class="sb-br"><span class="bx bx-s"></span>NexusBI</div><div class="sb-sec"><div class="sb-cat">Workspace</div>${vi.map(i=>`<div class="sb-i ${S.page===i.p||S.page.startsWith(i.p+'-')||(i.p==='workbooks'&&S.page.startsWith('wb-'))||(i.p==='stories'&&S.page.startsWith('story-'))||(i.p==='dashboards'&&S.page.startsWith('dv-'))?'ac':''}" onclick="nav('${i.p}')"><span class="d"></span>${i.l}</div>`).join('')}</div>${va.length?`<div class="sb-sec"><div class="sb-cat">Administration</div>${va.map(i=>`<div class="sb-i ${S.page===i.p?'ac':''}" onclick="nav('${i.p}')"><span class="d"></span>${i.l}</div>`).join('')}</div>`:''}<div class="sb-ft"><div style="font-weight:600;color:var(--ink);font-size:12px">${u.n}</div><div>${u.r} · <button onclick="S.user=null;nav('login')">Sign out</button></div></div></aside>`}
+
+function rHome(){const visD=visibleDashboards();return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Welcome to NexusBI</div><div class="pd">Enterprise Business Intelligence Platform · Logged in as ${S.user.n}</div></div></div><div class="kr"><div class="kp"><div class="kl">Data Sources</div><div class="kv">${DS.length}</div><div class="kd up">↑ ${DS.filter(d=>d.st==='ACTIVE').length} active</div></div><div class="kp"><div class="kl">${hp('workbook.view')?'Workbooks':'Dashboards'}</div><div class="kv">${hp('workbook.view')?WB.length:visD.length}</div><div class="kd up">${hp('workbook.view')?'Personal workspaces':'Available to view'}</div></div><div class="kp"><div class="kl">Pending Reviews</div><div class="kv">${DA.filter(d=>d.st==='PENDING_REVIEW').length}</div><div class="kd dn">Awaiting checker</div></div><div class="kp"><div class="kl">Active Users</div><div class="kv">${U.length-1}</div><div class="kd up">↑ All active</div></div></div><div class="g2"><div class="cb"><div class="ct">Query Volume · Last 7 Days</div>${svgBar(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],[2120,2540,2380,3140,3620,2880,2610],'#1e40af',520,220)}</div><div class="cb"><div class="ct">Recent Activity</div>${AL.slice(0,6).map(a=>`<div style="font-size:11px;padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between"><span>${a.us} · <span style="font-family:monospace;font-size:10px">${a.ac}</span></span><span style="color:var(--muted)">${a.tm}</span></div>`).join('')}</div></div></div>`}
+
+function rDS(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Sources</div><div class="pd">${DS.length} connections · 27 connector types · Oracle staging for files/APIs</div></div>${hp('datasource.create')?'<button class="btn" onclick="toast(\'Create datasource form\')">+ Add Data Source</button>':''}</div><div class="g3">${DS.map(d=>`<div class="cd" style="cursor:pointer" onclick="toast('Datasource: ${d.nm}')"><div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px"><div style="display:flex;gap:10px;flex:1">${dti(d.tp)}<div><div style="font-weight:600;font-size:13px">${d.nm}</div><div style="font-size:11px;color:var(--muted)">${d.tp}</div></div></div>${sb(d.st)}</div><div style="font-size:11px;color:var(--muted)">${d.st==='ERROR'?d.er:`Tested ${d.lt||'never'} · ${d.ms}ms · ${d.tb} tables`}</div></div>`).join('')}</div></div>`}
+
+// ── WORKBOOKS ──
+function rWorkbooks(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Workbooks</div><div class="pd">Personal workspaces · Worksheets · Calculated Fields · Parameters · Tableau replacement</div></div>${hp('workbook.create')?'<button class="btn" onclick="newWorkbook()">+ New Workbook</button>':''}</div>${WB.length===0?'<div style="text-align:center;padding:48px;color:var(--muted)">No workbooks yet. Create one to start exploring.</div>':`<div class="g3">${WB.map(wb=>`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-weight:600;font-size:14px;cursor:pointer" onclick="nav('wb-${wb.id}')">${wb.nm}</div>${wb.pub?'<span class="bdg bdg-ok">Published</span>':'<span class="bdg bdg-ol">Draft</span>'}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">${wb.ds}</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px"><span>v${wb.v} · ${wb.ownerNm}</span><span>${wb.tg}</span></div><div style="display:flex;gap:6px;padding-top:8px;border-top:1px solid var(--line)"><button class="btn bg bs" style="flex:1" onclick="nav('wb-${wb.id}')">✏ Edit</button><button class="btn bs" style="flex:1" onclick="publishWorkbook('${wb.id}')">📤 Publish</button></div></div>`).join('')}</div>`}</div>`}
+
+function newWorkbook(){const id='WB_NEW_'+Date.now();WB.push({id,nm:'Untitled Workbook',ds:'',ownerId:S.user.id,ownerNm:S.user.n,pub:false,publishedDashId:null,v:1,tg:''});WSheets[id]=[];CalcFields[id]=[];Params[id]=[];toast('Workbook created');nav('wb-'+id)}
+
+function publishWorkbook(wbId){const wb=WB.find(x=>x.id===wbId);if(!wb)return;const sheets=WSheets[wbId]||[];if(sheets.length===0){toast('Add worksheets before publishing');return}const dashId='DASH_FROM_'+wbId;DA.push({id:dashId,nm:wb.nm,ds:wb.ds||'Published from workbook',st:'DRAFT',on:wb.ownerNm,ownerId:wb.ownerId,v:1,dc:false,tg:wb.tg,w:sheets.map(s=>({t:s.ct==='table'?'tbl':s.ct,ti:s.nm,c:6,cats:['A','B','C','D','E'],vals:[120,180,150,210,170],cl:'#1e40af',cols:['Col A','Col B'],rows:[['v1','v2']]}))});wb.pub=true;wb.publishedDashId=dashId;toast(`Published as DRAFT dashboard "${wb.nm}"`);nav('dv-'+dashId)}
+
+function rWorkbookEditor(wbId){const wb=WB.find(x=>x.id===wbId);if(!wb)return`${sbar()}<div class="mn"><div class="pt">Workbook not found</div></div>`;
+const sheets=WSheets[wbId]||[];
+const calc=CalcFields[wbId]||[];
+const params=Params[wbId]||[];
+if(!S.activeWS&&sheets.length>0)S.activeWS=sheets[0].id;
+const aws=sheets.find(s=>s.id===S.activeWS);
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">workbooks / ${wb.nm}</div><div class="pt">Editing: ${wb.nm}</div><div class="pd">v${wb.v} · ${wb.pub?'Published':'Draft'} · ${sheets.length} worksheets · ${calc.length} calc fields · ${params.length} parameters</div></div><div style="display:flex;gap:6px"><button class="btn bg bs" onclick="nav('workbooks')">← Back</button><button class="btn bs" onclick="publishWorkbook('${wbId}')">📤 Publish to Dashboard</button></div></div>
+<div class="tabs">
+<button class="tab ${S.wbTab==='sheets'?'ac':''}" onclick="S.wbTab='sheets';R()">📊 Worksheets (${sheets.length})</button>
+<button class="tab ${S.wbTab==='calc'?'ac':''}" onclick="S.wbTab='calc';R()">⚡ Calculated Fields (${calc.length})</button>
+<button class="tab ${S.wbTab==='params'?'ac':''}" onclick="S.wbTab='params';R()">🎛 Parameters (${params.length})</button>
+</div>
+${S.wbTab==='sheets'?rWBSheets(wb,sheets,aws):''}
+${S.wbTab==='calc'?rWBCalc(wb,calc):''}
+${S.wbTab==='params'?rWBParams(wb,params):''}
+</div>`}
+
+function rWBSheets(wb,sheets,aws){return`<div style="display:grid;grid-template-columns:200px 1fr;gap:14px;min-height:500px"><div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:12px;font-weight:700">Worksheets</div><button class="btn bg bs" style="padding:2px 8px" onclick="newWorksheet('${wb.id}')">+</button></div>${sheets.length===0?'<div style="font-size:11px;color:var(--muted);padding:8px;text-align:center">No worksheets</div>':sheets.map(s=>`<div style="padding:8px 10px;font-size:12px;cursor:pointer;border-radius:4px;margin-bottom:2px;${s.id===S.activeWS?'background:var(--accent-lt);color:var(--accent);font-weight:600':''}" onclick="S.activeWS='${s.id}';R()">${s.nm}</div>`).join('')}</div><div>${aws?rWorksheetEditor(wb,aws):'<div style="text-align:center;padding:48px;color:var(--muted);background:#fff;border:1px dashed var(--line2);border-radius:6px">Select a worksheet or create a new one</div>'}</div></div>`}
+
+function rWorksheetEditor(wb,ws){const dims=['region','product_category','customer_id','order_date','status'];const measures=['total_revenue','order_count','avg_order_value','total_cost','margin'];return`<div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><input type="text" value="${ws.nm}" onchange="ws.nm=this.value;toast('Saved')" class="ip" style="max-width:300px;font-size:16px;font-weight:600" oninput="(WSheets['${wb.id}'].find(x=>x.id==='${ws.id}')||{}).nm=this.value"><select class="ip" style="max-width:140px" onchange="(WSheets['${wb.id}'].find(x=>x.id==='${ws.id}')||{}).ct=this.value;R()">${['bar','line','area','pie','scatter','heatmap','table','kpi'].map(t=>`<option value="${t}" ${t===ws.ct?'selected':''}>${t.toUpperCase()}</option>`).join('')}</select></div>
+<div style="display:grid;grid-template-columns:200px 1fr;gap:12px">
+<div class="fs-pane"><div class="fs-cat">Dimensions</div>${dims.map(d=>`<div class="fs-it" draggable="true">🏷 ${d}</div>`).join('')}<div class="fs-cat">Measures</div>${measures.map(m=>`<div class="fs-it measure" draggable="true">Σ ${m}</div>`).join('')}</div>
+<div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+<div class="shelf"><div class="shelf-l">Columns</div>${ws.shelves.cols.map(c=>`<span class="chip">${c} ✕</span>`).join('')||'<span style="color:var(--muted2);font-size:11px;font-family:monospace">drop here</span>'}</div>
+<div class="shelf"><div class="shelf-l">Rows</div>${ws.shelves.rows.map(r=>`<span class="chip">${r} ✕</span>`).join('')||'<span style="color:var(--muted2);font-size:11px;font-family:monospace">drop here</span>'}</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+<div class="shelf"><div class="shelf-l">Color</div>${ws.shelves.color?`<span class="chip" style="background:var(--amber-lt);color:var(--amber)">${ws.shelves.color} ✕</span>`:'<span style="color:var(--muted2);font-size:11px;font-family:monospace">—</span>'}</div>
+<div class="shelf"><div class="shelf-l">Size</div><span style="color:var(--muted2);font-size:11px;font-family:monospace">—</span></div>
+<div class="shelf"><div class="shelf-l">Label</div><span style="color:var(--muted2);font-size:11px;font-family:monospace">—</span></div>
+<div class="shelf"><div class="shelf-l">Tooltip</div><span style="color:var(--muted2);font-size:11px;font-family:monospace">—</span></div>
+</div>
+<div class="cb" style="min-height:280px"><div class="ct">${ws.nm} · Preview</div>${ws.ct==='bar'?svgBar(['APAC','EMEA','Americas','ANZ'],[1420,980,1560,320],'#1e40af',500,240):ws.ct==='line'?svgLine(['Jan','Feb','Mar','Apr','May','Jun'],[120,180,150,210,170,240],'#c2410c',500,240):'<div style="text-align:center;padding:60px;color:var(--muted)">Preview: '+ws.ct.toUpperCase()+'</div>'}</div>
+<div style="margin-top:8px;padding:10px;background:var(--sunk);border-left:3px solid var(--violet);font-size:11px;font-family:monospace"><b>Cube:</b> ${ws.cube} · <b>Filters:</b> 0 active · Drag fields onto shelves to query</div>
+</div></div></div>`}
+
+function newWorksheet(wbId){const id='WS_'+Date.now();const ws={id,nm:'Sheet '+((WSheets[wbId]||[]).length+1),ord:(WSheets[wbId]||[]).length,ct:'bar',cube:'Orders',shelves:{cols:[],rows:[],color:null,size:null,label:null,detail:[],tooltip:[]}};if(!WSheets[wbId])WSheets[wbId]=[];WSheets[wbId].push(ws);S.activeWS=id;toast('Worksheet created');R()}
+
+function rWBCalc(wb,calc){return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-weight:600;font-size:14px">Calculated Fields</div><div style="font-size:12px;color:var(--muted)">Custom dimensions and measures defined per workbook</div></div><button class="btn" onclick="toast('Open calc field editor')">+ New Calculation</button></div>${calc.length===0?'<div style="text-align:center;padding:48px;color:var(--muted);background:#fff;border:1px dashed var(--line2);border-radius:6px">No calculated fields yet</div>':`<div style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff"><table class="dt"><thead><tr><th>Name</th><th>Type</th><th>Expression</th><th>Status</th></tr></thead><tbody>${calc.map(f=>`<tr><td style="font-family:monospace">${f.nm}</td><td><span class="bdg ${f.ft==='measure'?'bdg-wn':'bdg-in'}">${f.ft} · ${f.dt}</span></td><td style="font-family:monospace;font-size:11px;color:var(--muted);max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.expr}</td><td>${f.valid?'<span class="bdg bdg-ok">✓ Valid</span>':'<span class="bdg bdg-er">✗ Error</span>'}</td></tr>`).join('')}</tbody></table></div>`}`}
+
+function rWBParams(wb,params){return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-weight:600;font-size:14px">Parameters</div><div style="font-size:12px;color:var(--muted)">User-input variables that drive worksheet behavior</div></div><button class="btn" onclick="toast('Open parameter editor')">+ New Parameter</button></div>${params.length===0?'<div style="text-align:center;padding:48px;color:var(--muted);background:#fff;border:1px dashed var(--line2);border-radius:6px">No parameters yet</div>':`<div class="g2">${params.map(p=>`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:600;font-size:13px">${p.disp}</div><div style="font-size:10px;color:var(--muted);font-family:monospace">${p.nm}</div></div><span class="bdg bdg-vi">${p.dt}</span></div><div style="font-size:11px;line-height:1.7"><div><b>Current:</b> ${p.cur}</div><div><b>Default:</b> ${p.def}</div><div><b>Allowable:</b> ${p.at==='list'?'list ('+(p.av||[]).join(', ')+')':p.at==='range'?p.rmin+' → '+p.rmax+' step '+p.rstep:'all'}</div></div></div>`).join('')}</div>`}`}
+
+// ── STORIES ──
+function rStories(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Stories</div><div class="pd">Multi-frame narratives walking audiences through dashboards and worksheets</div></div>${hp('story.create')?'<button class="btn" onclick="toast(\'Create new story\')">+ New Story</button>':''}</div>${ST.length===0?'<div style="text-align:center;padding:48px;color:var(--muted)">No stories yet</div>':`<div class="g3">${ST.map(s=>`<div class="cd" style="cursor:pointer" onclick="nav('story-${s.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-weight:600;font-size:14px">${s.nm}</div>${s.pub?'<span class="bdg bdg-ok">Published</span>':'<span class="bdg bdg-ol">Draft</span>'}</div><div style="font-size:12px;color:var(--muted);margin-bottom:10px">${s.ds}</div><div style="font-size:11px;color:var(--muted)">${s.points.length} points · v${s.v}</div></div>`).join('')}</div>`}</div>`}
+
+function rStoryDetail(sid){const story=ST.find(s=>s.id===sid);if(!story)return`${sbar()}<div class="mn"><div class="pt">Story not found</div></div>`;
+if(S.activeStoryPt>=story.points.length)S.activeStoryPt=0;
+const ap=story.points[S.activeStoryPt];
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">stories / ${story.nm}</div><div class="pt">${story.nm}</div><div class="pd">${story.ds}</div></div><div style="display:flex;gap:6px">${story.pub?'<span class="bdg bdg-ok">Published</span>':'<span class="bdg bdg-ol">Draft</span>'}</div></div>
+<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
+${story.points.map((p,i)=>`<button class="cd" style="flex-shrink:0;width:180px;text-align:left;padding:10px;${i===S.activeStoryPt?'border-color:var(--accent);background:var(--accent-lt)':''}" onclick="S.activeStoryPt=${i};R()"><div style="font-size:9px;color:var(--muted);font-family:monospace;margin-bottom:4px">#${i+1} · ${p.pt.toUpperCase()}</div><div style="font-size:12px;font-weight:600">${p.ti}</div></button>`).join('')}
+${hp('story.edit')?`<button class="cd" style="flex-shrink:0;width:180px;border-style:dashed;color:var(--muted);font-size:12px" onclick="toast('Add story point')">+ Add Point</button>`:''}
+</div>
+${ap?`<div class="cd" style="padding:24px"><div style="font-size:11px;color:var(--muted);font-family:monospace;margin-bottom:8px">Point ${S.activeStoryPt+1} of ${story.points.length} · ${ap.pt.toUpperCase()}</div><div style="font-size:24px;font-weight:700;margin-bottom:12px">${ap.ti}</div>${ap.narr?`<div style="font-size:14px;line-height:1.7;color:var(--ink2);max-width:700px;margin-bottom:16px">${ap.narr}</div>`:''}${ap.pt==='dashboard'&&ap.dashId?`<div style="background:var(--sunk);border:1px dashed var(--line2);border-radius:6px;padding:24px;text-align:center"><div style="font-size:32px;margin-bottom:6px">📊</div><div style="font-family:monospace;font-size:12px">${ap.dashId}</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Dashboard renders here in story view</div></div>`:''}</div>`:'<div style="text-align:center;padding:48px;color:var(--muted)">No story points yet</div>'}
+</div>`}
+
+function rDash(){const vi=visibleDashboards();return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Dashboards</div><div class="pd">${vi.length} ${hp('dashboard.create')?'dashboards':'dashboard(s) shared with you'}</div></div>${hp('dashboard.create')?'<button class="btn" onclick="toast(\'New dashboard created\')">+ New Dashboard</button>':''}</div>${vi.length===0?`<div style="text-align:center;padding:48px;color:var(--muted);background:#fff;border:1px dashed var(--line2);border-radius:6px">No dashboards available. ${S.user.r==='VIEWER'?'Ask an admin to share one with you.':''}</div>`:`<div class="g3">${vi.map(d=>`<div class="cd" style="cursor:pointer" onclick="nav('dv-${d.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-weight:600;font-size:14px">${d.nm}</div>${sb(d.st)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">${d.ds}</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>v${d.v} · ${d.on}</span>${d.dc?'<span class="bdg bdg-vi" style="font-size:9px">Dual-Check</span>':''}</div></div>`).join('')}</div>`}</div>`}
+
+function rWidget(w){
+  if(w.t==='kpi')return`<div class="wg" style="grid-column:span ${w.c}"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">${w.ti}</div><div style="font-size:28px;font-weight:700;margin-top:4px">${w.vl}</div><div style="font-size:11px;color:${w.su.includes('↑')?'var(--emerald)':'var(--warm)'};margin-top:4px">${w.su}</div></div>`;
+  if(w.t==='bar')return`<div class="wg" style="grid-column:span ${w.c}"><div class="wt">${w.ti}</div>${svgBar(w.cats,w.vals,w.cl,560,220)}</div>`;
+  if(w.t==='line')return`<div class="wg" style="grid-column:span ${w.c}"><div class="wt">${w.ti}</div>${svgLine(w.cats,w.vals,w.cl,700,220)}</div>`;
+  if(w.t==='tbl')return`<div class="wg" style="grid-column:span ${w.c}"><div class="wt">${w.ti}</div><table class="dt"><thead><tr>${w.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${w.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return'';
+}
+
+function rDV(id){const d=DA.find(x=>x.id===id);if(!d)return`${sbar()}<div class="mn"><div class="pt">Not found</div></div>`;
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">dashboards / ${d.nm}</div><div class="pt">${d.nm}</div><div class="pd">${d.ds}</div></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${sb(d.st)}${d.dc?'<span class="bdg bdg-vi">👥 Dual-Checker</span>':''}${hp('perf.view')?`<button class="btn bg bs" onclick="nav('dp-${id}')">⚡ Perf</button>`:''}${hp('dashboard.replay')?`<button class="btn bg bs" onclick="nav('dr-${id}')">⏮ Replay</button>`:''}${hp('dashboard.export')?`<button class="btn bg bs" onclick="toast('Downloading PNG...')">📥 Export</button>`:''}${hp('dashboard.edit')?`<button class="btn bs" onclick="nav('de-${id}')">✏ Edit</button>`:''}${hp('dashboard.submit')&&(d.st==='DRAFT'||d.st==='REJECTED')?`<button class="btn bw bs" onclick="subD('${id}')">Submit for Review</button>`:''}</div></div><div class="nl"><span style="color:var(--violet);font-size:14px">✦</span><input placeholder="Type a natural language filter... e.g. 'show Q3 APAC revenue above 1M'" id="nli"><button class="btn bs bv" onclick="aNL()">✦ Apply</button></div><div id="nlc" style="margin-bottom:12px"></div><div class="dg">${d.w.map(w=>rWidget(w)).join('')}</div></div>`}
+
+function rDE(id){const d=DA.find(x=>x.id===id);if(!d)return`${sbar()}<div class="mn"><div class="pt">Not found</div></div>`;
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">dashboards / ${d.nm} / edit</div><div class="pt">Editing: ${d.nm}</div></div><div style="display:flex;gap:6px"><button class="btn bg bs">↶ Undo</button><button class="btn bg bs">↷ Redo</button><span class="bdg bdg-ol">${d.st}</span><button class="btn bs" onclick="toast('Saved!');nav('dv-${id}')">💾 Save</button></div></div><div style="display:flex;gap:14px"><div style="flex:1"><div class="dg">${d.w.map(w=>{const base=rWidget(w);return base.replace('class="wg"','class="wg" style="border:2px dashed var(--accent-lt);cursor:move"')}).join('')}</div></div><div class="wp"><div class="wpt">Add Widget</div><button class="wpb" onclick="toast('Chart widget added')">📊 Chart</button><button class="wpb" onclick="toast('Table widget added')">📋 Table</button><button class="wpb" onclick="toast('KPI widget added')">📈 KPI</button><button class="wpb" onclick="toast('Filter widget added')">🔍 Filter</button><button class="wpb" onclick="toast('Text widget added')">📝 Text</button></div></div></div>`}
+
+function subD(id){const d=DA.find(x=>x.id===id);if(d){d.st='PENDING_REVIEW';toast('Submitted for review!');R()}}
+function aNL(){const i=document.getElementById('nli');if(!i||!i.value.trim())return;const ch=document.getElementById('nlc');if(ch){const tk=i.value.toLowerCase().match(/\b(q[1-4]|20\d{2}|apac|emea|americas|above|below|\d+[mk]?|revenue|orders)\b/g)||['filter'];ch.innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center"><span style="font-size:11px;color:var(--muted)">🔍 Filters (92% confidence):</span>${tk.map(t=>`<span class="nc">${t} ✕</span>`).join('')}<button class="btn bg bs" onclick="document.getElementById('nlc').innerHTML=''">Clear all</button></div>`}toast(`NL filter applied: ${i.value}`)}
+
+function rChk(){const pn=DA.filter(d=>d.st==='PENDING_REVIEW');return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Review Queue</div><div class="pd">${pn.length} dashboard(s) pending your approval</div></div></div>${pn.length===0?'<div style="text-align:center;padding:48px;color:var(--muted)">✓ All caught up — no pending reviews</div>':pn.map(d=>`<div class="cd" style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><b>${d.nm}</b> ${sb(d.st)} ${d.dc?'<span class="bdg bdg-vi">👥 Dual-Checker</span>':''}</div><div style="font-size:12px;color:var(--muted)">v${d.v} · Submitted by ${d.on}</div></div><div style="display:flex;gap:6px"><button class="btn bg bs" onclick="nav('dv-${d.id}')">👁 View</button><button class="btn be bs" onclick="appD('${d.id}')">✓ Approve</button><button class="btn bw bs" onclick="rejD('${d.id}')">✕ Reject</button></div></div>`).join('')}<div style="margin-top:16px;padding:14px;background:var(--amber-lt);border-left:3px solid var(--amber);font-size:12px;border-radius:0 4px 4px 0"><b>Dual-checker rules:</b> Two distinct checker IDs required · Self-approval blocked · Either rejection → REJECTED · Both approvals → APPROVED</div></div>`}
+
+function appD(id){const d=DA.find(x=>x.id===id);if(!d)return;d.st='APPROVED';toast(`✓ Dashboard "${d.nm}" approved!`);R()}
+function rejD(id){const d=DA.find(x=>x.id===id);if(!d)return;S.modal={t:'rej',id,nm:d.nm};R()}
+function doRej(){const r=document.getElementById('rr');if(!r||!r.value.trim()){toast('Comments required');return}const d=DA.find(x=>x.id===S.modal.id);if(d)d.st='REJECTED';S.modal=null;toast('Rejected');R()}
+
+function rReplay(id){const d=DA.find(x=>x.id===id);if(!d)return`${sbar()}<div class="mn"><div class="pt">Not found</div></div>`;
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">dashboards / ${d.nm} / replay</div><div class="pt">Approval History · ${d.nm}</div></div></div><div class="tl">${[{v:1,d:'Jan 15'},{v:2,d:'Feb 3'},{v:3,d:'Mar 12'}].map((x,i)=>`<div class="tl-n ${i===2?'ac':''}" onclick="toast('Viewing snapshot v${x.v}')"><div class="v">v${x.v}</div><div class="da">${x.d}</div></div>${i<2?'<div class="tl-l"></div>':''}`).join('')}</div><div style="background:var(--sunk);border-left:3px solid var(--ink);padding:12px 16px;font-size:12px;margin:16px 0"><b>Replaying v3</b> — approved March 12, 2025 by Sarah Chen. Read-only snapshot.</div><div class="cb"><div class="ct">Revenue by Region (as of v3)</div>${svgBar(['APAC','EMEA','Americas','ANZ','LATAM'],[1200,880,1400,280,220],'#047857',560,200)}</div></div>`}
+
+function rPerf(id){const d=DA.find(x=>x.id===id);if(!d)return`${sbar()}<div class="mn"><div class="pt">Not found</div></div>`;
+const ww=[{n:'Revenue by Region',p:320,pc:22},{n:'Top Products Table',p:410,pc:28},{n:'Customer Segments',p:872,pc:58},{n:'Cohort Retention',p:1240,pc:82},{n:'Funnel Analysis',p:2140,pc:96}];
+return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">dashboards / ${d.nm} / perf</div><div class="pt">Performance Scorecard</div></div></div><div class="kr" style="grid-template-columns:repeat(3,1fr)"><div class="kp"><div class="kl">P50 Load Time</div><div class="kv">287<span style="font-size:14px;color:var(--muted)">ms</span></div></div><div class="kp"><div class="kl">P95 Load Time</div><div class="kv">1,240<span style="font-size:14px;color:var(--muted)">ms</span></div><div class="kd dn">Above 1s threshold</div></div><div class="kp"><div class="kl">Pre-Agg Coverage</div><div class="kv">68<span style="font-size:14px;color:var(--muted)">%</span></div></div></div><div class="cb" style="margin-bottom:16px"><div class="ct">Widget Load Times (P95)</div>${ww.map(w=>{const c=w.p<500?'var(--emerald)':w.p<1000?'var(--amber)':w.p<1500?'var(--warm)':'#dc2626';return`<div class="pb-r"><div class="pb-l">${w.n}</div><div class="pb-t"><div class="pb-f" style="width:${w.pc}%;background:${c}"></div></div><div class="pb-v" style="color:${c}">${w.p}ms</div></div>`}).join('')}</div><div style="background:var(--amber-lt);border-left:3px solid var(--amber);padding:14px;font-size:12px;border-radius:0 4px 4px 0"><b>⚠ Funnel Analysis</b> — Averaging 2.1s over 247 samples · <button class="btn bs" style="margin-left:8px" onclick="toast('Pre-aggregation applied!')">Apply Preagg →</button></div></div>`}
+
+function rLineage(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Lineage</div><div class="pd">Visualize the flow from data sources → cubes → dashboards → widgets</div></div></div><div class="lc-c" style="min-height:340px"><div class="ln ln-d" style="top:30px;left:15px">📀 production-warehouse</div><div class="ln ln-d" style="top:120px;left:15px">📀 snowflake-finance</div><div class="ln ln-d" style="top:210px;left:15px">📀 bq-analytics</div><div class="ln ln-c" style="top:30px;left:230px">◆ Orders</div><div class="ln ln-c" style="top:100px;left:230px">◆ Customers</div><div class="ln ln-c" style="top:170px;left:230px">◆ Revenue</div><div class="ln ln-c" style="top:240px;left:230px">◆ Events</div><div class="ln ln-a" style="top:15px;left:420px" onclick="nav('dv-DASH_REVENUE')">📊 Q4 Revenue</div><div class="ln ln-a" style="top:95px;left:420px" onclick="nav('dv-DASH_CHURN')">📊 Churn</div><div class="ln ln-a" style="top:175px;left:420px" onclick="nav('dv-DASH_APAC')">📊 APAC Sales</div><div class="ln ln-w" style="top:15px;left:610px">Revenue Chart</div><div class="ln ln-w" style="top:55px;left:610px">Top Products</div><div class="ln ln-w" style="top:95px;left:610px">Churn Trend</div><div class="ln ln-w" style="top:175px;left:610px">APAC Countries</div></div><div style="margin-top:12px;display:flex;gap:20px;font-size:11px"><span><span style="display:inline-block;width:10px;height:10px;background:var(--accent-lt);border:1.5px solid var(--accent);margin-right:4px"></span>Data Source</span><span><span style="display:inline-block;width:10px;height:10px;background:var(--violet-lt);border:1.5px solid var(--violet);margin-right:4px"></span>Cube</span><span><span style="display:inline-block;width:10px;height:10px;background:var(--emerald-lt);border:1.5px solid var(--emerald);margin-right:4px"></span>Dashboard</span><span><span style="display:inline-block;width:10px;height:10px;background:var(--amber-lt);border:1.5px solid var(--amber);margin-right:4px"></span>Widget</span></div></div>`}
+
+function rTpl(){const T=[{n:'Sales Performance',ct:'Sales',i:142,g:true},{n:'Financial Overview',ct:'Finance',i:89,g:false},{n:'Customer Cohort',ct:'Analytics',i:47,g:true},{n:'Marketing Funnel',ct:'Marketing',i:31,g:false}];const gr=['#dbeafe,#eef2ff','#d1fae5,#ecfdf5','#fef3c7,#fffbeb','#ede9fe,#faf5ff'],ic=['📊','💰','📈','🎯'];return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Template Marketplace</div><div class="pd">Browse, install, and publish reusable dashboard templates</div></div></div><div class="g3">${T.map((t,i)=>`<div class="cd" style="cursor:pointer;overflow:hidden;padding:0" onclick="toast('Install ${t.n}')"><div style="height:70px;background:linear-gradient(135deg,${gr[i]});display:flex;align-items:center;justify-content:center;font-size:28px">${ic[i]}</div><div style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><b style="font-size:13px">${t.n}</b>${t.g?'<span class="bdg bdg-in" style="font-size:9px">🌐 Global</span>':''}</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:10px"><span>${t.ct}</span><span>⬇ ${t.i}</span></div></div></div>`).join('')}</div></div>`}
+
+function rExplorer(){const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Data Explorer</div><div class="pd">Visually explore data with Graphic Walker</div></div></div><div style="display:grid;grid-template-columns:200px 1fr;gap:14px;min-height:400px"><div class="fs-pane"><div class="fs-cat">Dimensions</div>${['📅 order_date','🏷 region','🏷 product_category','🏷 customer_id','🏷 status'].map(d=>`<div class="fs-it">${d}</div>`).join('')}<div class="fs-cat">Measures</div>${['Σ total_revenue','# order_count','x̄ avg_order_value','Σ total_cost','% margin'].map(x=>`<div class="fs-it measure">${x}</div>`).join('')}</div><div class="cb"><div class="ct">Revenue by Region · Over Time</div>${svgMulti(m,[{n:'APAC',v:[320,380,350,420,480,510,490,560,620,680,720,780]},{n:'EMEA',v:[280,300,320,310,340,360,380,370,390,420,440,460]},{n:'Americas',v:[420,440,460,500,520,560,580,620,640,680,720,760]}],560,320)}</div></div></div>`}
+
+function rSemantic(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">Semantic Layer</div><div class="pd">Cube.js schemas that define your business metrics</div></div>${hp('schema.create')?'<button class="btn" onclick="toast(\'Auto-Generate triggered\')">⚡ Auto-Generate</button>':''}</div><div style="display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px"><button class="btn bg bs" style="border-bottom:2px solid var(--ink);border-radius:0">Orders</button><button class="btn bg bs" style="border-radius:0;border-bottom:2px solid transparent" onclick="toast('Customers cube')">Customers</button><button class="btn bg bs" style="border-radius:0;border-bottom:2px solid transparent" onclick="toast('Revenue cube')">Revenue</button></div><div class="cbl"><span style="color:#82aaff">cube</span>(<span style="color:#c3e88d">\`Orders\`</span>, {
+  sql: <span style="color:#c3e88d">\`SELECT * FROM public.orders\`</span>,
+
+  <span style="color:#c792ea">measures</span>: {
+    count: { type: <span style="color:#c3e88d">\`count\`</span> },
+    total_revenue: {
+      sql: <span style="color:#c3e88d">\`\${CUBE}.total_amount\`</span>,
+      type: <span style="color:#c3e88d">\`sum\`</span>,
+      format: <span style="color:#c3e88d">\`currency\`</span>
+    },
+    avg_order_value: {
+      sql: <span style="color:#c3e88d">\`\${CUBE}.total_amount\`</span>,
+      type: <span style="color:#c3e88d">\`avg\`</span>
+    }
+  },
+
+  <span style="color:#c792ea">dimensions</span>: {
+    id: { sql: <span style="color:#c3e88d">\`\${CUBE}.id\`</span>, type: <span style="color:#c3e88d">\`number\`</span>, primaryKey: <span style="color:#f78c6c">true</span> },
+    order_date: { sql: <span style="color:#c3e88d">\`\${CUBE}.order_date\`</span>, type: <span style="color:#c3e88d">\`time\`</span> },
+    region: { sql: <span style="color:#c3e88d">\`\${CUBE}.region\`</span>, type: <span style="color:#c3e88d">\`string\`</span> }
+  },
+
+  <span style="color:#c792ea">preAggregations</span>: {
+    revenue_by_region_monthly: {
+      measures: [total_revenue, count],
+      dimensions: [region],
+      timeDimension: order_date,
+      granularity: <span style="color:#c3e88d">\`month\`</span>,
+      refreshKey: { every: <span style="color:#c3e88d">\`0 2 * * *\`</span> }
+    }
+  }
+});</div><div style="display:flex;gap:8px;margin-top:12px"><span class="bdg bdg-ok">✓ Valid</span><span class="bdg bdg-ol">5 measures · 12 dimensions</span><span class="bdg bdg-ol">v3</span></div></div>`}
+
+function rAU(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">admin</div><div class="pt">User Management</div><div class="pd">${U.length} users</div></div><button class="btn" onclick="toast('Create user')">+ Create User</button></div><table class="dt"><thead><tr><th>Username</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead><tbody>${U.map(u=>`<tr><td style="font-weight:600">${u.u}</td><td>${u.n}</td><td style="font-size:12px;color:var(--muted)">${u.e}</td><td><span class="bdg bdg-in">${u.r}</span></td><td><span class="bdg bdg-ok">Active</span></td></tr>`).join('')}</tbody></table><div style="margin-top:24px"><div class="ct">Role · Permission Matrix</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:10px">${[['PLATFORM_ADMIN',46,'var(--accent)'],['DS_ADMIN',18,'var(--violet)'],['AUTHOR',27,'var(--emerald)'],['CHECKER',6,'var(--amber)'],['VIEWER',5,'var(--warm)'],['EMBED_ONLY',1,'var(--rose)']].map(([n,c,cl])=>`<div style="background:#fff;padding:20px;text-align:center"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:12px">${n}</div><div style="font-size:42px;font-weight:700;color:${cl}">${c}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">permissions</div></div>`).join('')}</div></div></div>`}
+
+function rAA(){return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">admin</div><div class="pt">Audit Log</div><div class="pd">${AL.length} events</div></div></div><table class="dt"><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Status</th><th>ms</th></tr></thead><tbody>${AL.map(a=>`<tr><td style="font-size:11px;white-space:nowrap">${a.tm}</td><td style="font-weight:500">${a.us}</td><td><span class="bdg bdg-ol" style="font-family:monospace">${a.ac}</span></td><td style="font-family:monospace;font-size:11px">${a.rs}</td><td><span class="bdg ${a.s<300?'bdg-ok':'bdg-er'}">${a.s}</span></td><td style="font-size:11px;color:var(--muted)">${a.ms}ms</td></tr>`).join('')}</tbody></table></div>`}
+
+function rGP(t,d,c){return`${sbar()}<div class="mn"><div class="tb"><div><div class="bc">admin</div><div class="pt">${t}</div><div class="pd">${d}</div></div></div>${c}</div>`}
+
+function rApi(){const s=[{n:'stripe-payments',t:'REST_POLL',u:'api.stripe.com/v1/charges',r:'12,847',stg:'NB_STG_API_STRIPE'},{n:'github-issues',t:'GRAPHQL',u:'api.github.com/graphql',r:'843',stg:'NB_STG_API_GITHUB'},{n:'segment-events',t:'WEBHOOK',u:'/api/webhook/ingest/seg_x9k2',r:'4.7M',stg:'NB_STG_API_SEGMENT'}];return`${sbar()}<div class="mn"><div class="tb"><div><div class="pt">API Sources</div><div class="pd">REST · GraphQL · OAuth · Webhook · Data lands in Oracle staging tables</div></div><button class="btn" onclick="toast('Add API Source')">+ Add API Source</button></div><table class="dt"><thead><tr><th>Name</th><th>Type</th><th>URL</th><th>Staging Table</th><th>Rows</th><th>Status</th></tr></thead><tbody>${s.map(x=>`<tr><td style="font-weight:600">${x.n}</td><td><span class="bdg bdg-in">${x.t}</span></td><td style="font-family:monospace;font-size:11px">${x.u}</td><td style="font-family:monospace;font-size:11px;color:var(--accent)">${x.stg}</td><td>${x.r}</td><td><span class="bdg bdg-ok">Active</span></td></tr>`).join('')}</tbody></table><div style="margin-top:14px;padding:14px;background:var(--accent-lt);border-left:3px solid var(--accent);font-size:12px;border-radius:0 4px 4px 0"><b>Oracle staging:</b> Each API poll creates/updates an Oracle table prefixed <code>NB_STG_API_</code>. Cube.js queries these tables via the Oracle driver. No DuckDB required.</div></div>`}
+
+// ── ROUTER ──
+function R(){const a=document.getElementById('app');let h='';const p=S.page;
+if(!S.user||p==='login')h=rLogin();
+else if(p==='home')h=`<div class="shell">${rHome()}</div>`;
+else if(p==='datasources')h=`<div class="shell">${rDS()}</div>`;
+else if(p==='api-sources')h=`<div class="shell">${rApi()}</div>`;
+else if(p==='workbooks')h=`<div class="shell">${rWorkbooks()}</div>`;
+else if(p.startsWith('wb-'))h=`<div class="shell">${rWorkbookEditor(p.slice(3))}</div>`;
+else if(p==='stories')h=`<div class="shell">${rStories()}</div>`;
+else if(p.startsWith('story-'))h=`<div class="shell">${rStoryDetail(p.slice(6))}</div>`;
+else if(p==='dashboards')h=`<div class="shell">${rDash()}</div>`;
+else if(p.startsWith('dv-'))h=`<div class="shell">${rDV(p.slice(3))}</div>`;
+else if(p.startsWith('de-'))h=`<div class="shell">${rDE(p.slice(3))}</div>`;
+else if(p.startsWith('dr-'))h=`<div class="shell">${rReplay(p.slice(3))}</div>`;
+else if(p.startsWith('dp-'))h=`<div class="shell">${rPerf(p.slice(3))}</div>`;
+else if(p==='checker')h=`<div class="shell">${rChk()}</div>`;
+else if(p==='lineage')h=`<div class="shell">${rLineage()}</div>`;
+else if(p==='templates')h=`<div class="shell">${rTpl()}</div>`;
+else if(p==='explorer')h=`<div class="shell">${rExplorer()}</div>`;
+else if(p==='semantic')h=`<div class="shell">${rSemantic()}</div>`;
+else if(p==='admin-users')h=`<div class="shell">${rAU()}</div>`;
+else if(p==='admin-audit')h=`<div class="shell">${rAA()}</div>`;
+else if(p==='admin-roles')h=`<div class="shell">${rGP('Roles & Permissions','Manage roles and permission assignments',`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line)">${[['PLATFORM_ADMIN',46],['DS_ADMIN',18],['AUTHOR',27],['CHECKER',6],['VIEWER',5],['EMBED_ONLY',1]].map(([n,c])=>`<div style="background:#fff;padding:24px;text-align:center"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:10px">${n}</div><div style="font-size:48px;font-weight:700">${c}</div></div>`).join('')}</div>`)}</div>`;
+else if(p==='admin-platform')h=`<div class="shell">${rGP('Platform Configuration','Manage system-wide settings',`<table class="dt"><thead><tr><th>Key</th><th>Value</th><th>Type</th></tr></thead><tbody><tr><td style="font-family:monospace">app.name</td><td>NexusBI</td><td><span class="bdg bdg-ol">STRING</span></td></tr><tr><td style="font-family:monospace">app.version</td><td>6.0.0</td><td><span class="bdg bdg-ol">STRING</span></td></tr><tr><td style="font-family:monospace">approval.dual_checker_default</td><td>false</td><td><span class="bdg bdg-ol">BOOLEAN</span></td></tr></tbody></table>`)}</div>`;
+else if(p==='admin-webhooks')h=`<div class="shell">${rGP('Outbound Webhooks','Configure webhook endpoints',`<div class="g3">${[{n:'slack-notify',u:'hooks.slack.com',t:'APPROVAL',s:247},{n:'pagerduty',u:'events.pagerduty.com',t:'THRESHOLD',s:14},{n:'datadog',u:'api.datadoghq.com',t:'SCHEDULE',s:89}].map(w=>`<div class="cd"><div style="display:flex;justify-content:space-between"><b>${w.n}</b><span class="bdg bdg-ok">Active</span></div><div style="font-family:monospace;font-size:10px;color:var(--muted);margin:6px 0">${w.u}</div><div style="font-size:11px;color:var(--emerald)">${w.t} · ${w.s} sent</div></div>`).join('')}</div>`)}</div>`;
+else if(p==='admin-preagg')h=`<div class="shell">${rGP('Pre-Aggregations','Performance recommendations',`<div class="cd" style="margin-bottom:10px;border-left:3px solid var(--amber)"><b>Orders cube</b> <span class="bdg bdg-ol">87% confidence</span><br><span style="font-size:12px;color:var(--muted)">1,247 queries · 892ms avg</span><br><button class="btn bs" style="margin-top:8px" onclick="toast('Applied!')">Apply →</button></div><div class="cd" style="border-left:3px solid var(--emerald)"><b>Revenue cube</b> <span class="bdg bdg-ok">Applied</span><br><span style="font-size:12px;color:var(--emerald)">↓ 84% faster since applied</span></div>`)}</div>`;
+else if(p==='admin-timed')h=`<div class="shell">${rGP('Time-Bounded Access','Grant expiring access',`<div class="cd" style="margin-bottom:8px"><b>contractor-jdoe</b> → Q4 Revenue<br><span style="font-size:12px">Expires <b>in 3 days</b></span></div><div class="cd" style="margin-bottom:8px"><b>audit-team</b> → finance-sf<br><span style="font-size:12px">Expires <b>in 28 days</b></span></div><div class="cd" style="background:#fee2e2;border-left:3px solid #dc2626"><b>temp-analyst</b> → production<br><span style="font-size:12px;color:#991b1b">Expired 2h ago — access denied</span></div>`)}</div>`;
+else if(p==='tableau')h=`<div class="shell">${rGP('Tableau Import','Import .twbx workbooks',`<div style="border:2px dashed var(--line2);border-radius:8px;padding:48px;text-align:center;background:var(--sunk)"><div style="font-size:32px;margin-bottom:10px">📁</div><div style="font-weight:600;margin-bottom:4px">Upload Tableau Workbook</div><div style="font-size:12px;color:var(--muted)">Drag & drop .twbx or click to browse</div><button class="btn bg" style="margin-top:14px" onclick="toast('File picker opened')">Choose File</button></div><div style="margin-top:16px;padding:14px;background:var(--accent-lt);border-left:3px solid var(--accent);font-size:12px;border-radius:0 4px 4px 0"><b>Tableau parity:</b> Workbooks → Worksheets → Calculated Fields → Parameters → Stories → Dashboard Actions all imported. Native NexusBI workbooks support every Tableau feature.</div>`)}</div>`;
+else h=`<div class="shell">${sbar()}<div class="mn"><div class="pt">Page: ${p}</div></div></div>`;
+if(S.modal){if(S.modal.t==='rej')h+=`<div class="mo" onclick="if(event.target===this){S.modal=null;R()}"><div class="ml"><div class="mlt">Reject: ${S.modal.nm}</div><div class="fr"><label class="fl">Comments (required)</label><textarea class="ip" id="rr" rows="4" placeholder="Explain why..."></textarea></div><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn bg" onclick="S.modal=null;R()">Cancel</button><button class="btn bw" onclick="doRej()">Reject</button></div></div></div>`}
+if(S.toast)h+=`<div class="ts">${S.toast}</div>`;
+a.innerHTML=h;
+}
+R();
+</script>
+</body>
+</html>
